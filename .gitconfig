@@ -1,0 +1,92 @@
+[filesystem "JetBrains s.r.o.|11.0.15|/dev/disk3s5"]
+	timestampResolution = 4000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+
+#######################################
+# My customisations START
+######################################
+[user]
+	name = supreeth.karnam
+	email = supreeth.surendrababu@truecaller.com
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+	process = git-lfs filter-process
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	s = status
+	fd = diff --
+	p = pull --rebase
+	a = add .
+	rh = reset HEAD
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	cb = "!f() { \t\t\tgit checkout feature/TCANDROID-$1; \t\t}; f"
+	cbn = "!f() {                         git checkout -b feature/TCANDROID-$1;                 }; f"
+	lu = log --author=supreeth.karnam
+	pu = "!f() { \tgit push origin HEAD:$(git symbolic-ref --short HEAD); \t}; f"
+[push]
+	default = current
+[core]
+	excludesfile = /Users/supreethks/.gitignore_global
+	ignorecase = false
+	editor = vim
+	autocrlf = input
+	pager = diff-so-fancy | less --tabs=4 -RFX
+	[merge]
+	   tool = studio
+	[mergetool "studio"]
+	   cmd = studio merge $(cd $(dirname $LOCAL) && pwd)/$(basename $LOCAL) $(cd $(dirname $REMOTE) && pwd)/$(basename $REMOTE) $(cd $(dirname $BASE) && pwd)/$(basename $BASE) $(cd $(dirname $MERGED) && pwd)/$(basename $MERGED)
+	   trustExitCode = true
+	[diff]
+	   tool = studio
+	[difftool "studio"]
+	   cmd = studio diff $(cd $(dirname $LOCAL) && pwd)/$(basename $LOCAL) $(cd $(dirname $REMOTE) && pwd)/$(basename $REMOTE)
+
+	# Goes in your .git/config file
+[alias]
+  # Temporarily stop tracking a file in git.
+  # usage: git unwatch path/to/file
+  unwatch = update-index --assume-unchanged
+
+  # Resume tracking a file in git.
+  # usage: git watch path/to/file
+  watch = update-index --no-assume-unchanged
+
+	#List the files that are unwatched
+	lsunwatch = ls-files -v | grep ^[a-z]
+#######################################
+# My customisations END 
+######################################
+
+[color]
+	ui = auto
+[filesystem "JetBrains s.r.o.|17.0.6|/dev/disk3s5"]
+	timestampResolution = 3000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "JetBrains s.r.o.|17.0.6|/dev/disk2s5"]
+	timestampResolution = 6000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "JetBrains s.r.o.|17.0.10|/dev/disk3s5"]
+	timestampResolution = 4000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "JetBrains s.r.o.|17.0.9|/dev/disk3s5"]
+	timestampResolution = 6000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "JetBrains s.r.o.|21.0.3|/dev/disk3s5"]
+	timestampResolution = 3000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "Eclipse Adoptium|17.0.13|/dev/disk3s5"]
+	timestampResolution = 3000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "JetBrains s.r.o.|21.0.4|/dev/disk3s5"]
+	timestampResolution = 10000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "JetBrains s.r.o.|21.0.5|/dev/disk3s5"]
+	timestampResolution = 10000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
