@@ -1,0 +1,103 @@
+#!/usr/bin/env python3
+import os
+import re
+import glob
+
+VAULT_PATH = "/Users/supreethks/docs/obsidian/main-vault"
+JOURNAL_DIR = os.path.join(VAULT_PATH, "journal")
+
+TAG_MAP = {
+    "#vimark": "projects/vimark/Kanban.md",
+    "#yorely": "projects/yorely/Kanban.md",
+    "#kagga": "projects/kagga/Kanban.md",
+    "#eink": "projects/eink-templates/Kanban.md",
+    "#eink-templates": "projects/eink-templates/Kanban.md",
+    "#supernote": "projects/eink-templates/Kanban.md"
+}
+
+PROCESSED_MARKER = "📥"
+
+def sync_daily_ideas():
+    journal_files = glob.glob(os.path.join(JOURNAL_DIR, "*.md"))
+    total_imported = 0
+
+    for fpath in journal_files:
+        with open(fpath, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+        file_modified = False
+        fname = os.path.basename(fpath).replace(".md", "")
+
+        for i in range(len(lines)):
+            line = lines[i]
+            if PROCESSED_MARKER in line:
+                continue
+
+            matched_tag = None
+            for tag in TAG_MAP:
+                if re.search(rf"(?:^|\s){re.escape(tag)}(?:\b|\s|$)", line, re.IGNORECASE):
+                    matched_tag = tag.lower()
+                    break
+
+            if not matched_tag:
+                continue
+
+            target_kanban_rel = TAG_MAP[matched_tag]
+            target_kanban_path = os.path.join(VAULT_PATH, target_kanban_rel)
+            if not os.path.exists(target_kanban_path):
+                continue
+
+            # Clean line of tag and bullet prefixes
+            clean_title = re.sub(rf"(?:^|\s){re.escape(matched_tag)}(?:\b|\s|$)", " ", line, flags=re.IGNORECASE)
+            clean_title = re.sub(r"^\s*[-*]\s*(?:\[[ xX]\]\s*)?", "", clean_title).strip()
+            if not clean_title:
+                clean_title = "Untitled Idea"
+
+            # Lookahead for attached images / sub-bullets
+            extra_lines = []
+            j = i + 1
+            while j < len(lines):
+                next_line = lines[j]
+                if next_line.strip() == "" or re.match(r"^#{1,6}\s", next_line) or re.match(r"^\s*[-*]\s*\[[ xX]\]", next_line):
+                    break
+                if re.search(r"!\[.*\]\(.*\)|\!\[\[.*\]\]", next_line) or next_line.startswith(" ") or next_line.startswith("\t"):
+                    extra_lines.append(next_line.strip())
+                    j += 1
+                else:
+                    break
+
+            with open(target_kanban_path, "r", encoding="utf-8") as kf:
+                kanban_content = kf.read()
+
+            # Deduplication
+            if clean_title in kanban_content:
+                lines[i] = lines[i].rstrip("\n") + f" {PROCESSED_MARKER}\n"
+                file_modified = True
+                continue
+
+            card_text = f"- [ ] {clean_title} [[journal/{fname}|📅]]"
+            if extra_lines:
+                card_text += "\n\t" + "\n\t".join(extra_lines)
+
+            backlog_pattern = r"(##\s*(?:📋\s*)?(?:Feature\s+)?Backlog\s*\n)"
+            if re.search(backlog_pattern, kanban_content, re.IGNORECASE):
+                kanban_content = re.sub(backlog_pattern, rf"\g<1>\n{card_text}\n", kanban_content, count=1, flags=re.IGNORECASE)
+            else:
+                kanban_content += f"\n\n## 📋 Backlog\n\n{card_text}\n"
+
+            with open(target_kanban_path, "w", encoding="utf-8") as kf:
+                kf.write(kanban_content)
+
+            lines[i] = lines[i].rstrip("\n") + f" {PROCESSED_MARKER}\n"
+            file_modified = True
+            total_imported += 1
+            print(f"Added to {matched_tag}: {clean_title}")
+
+        if file_modified:
+            with open(fpath, "w", encoding="utf-8") as f:
+                f.writelines(lines)
+
+    print(f"Sync complete. Imported {total_imported} idea(s).")
+
+if __name__ == "__main__":
+    sync_daily_ideas()
