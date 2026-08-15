@@ -27,6 +27,8 @@ def sync_daily_ideas():
 
         file_modified = False
         fname = os.path.basename(fpath).replace(".md", "")
+        date_match = re.search(r"(\d{4}-\d{2}-\d{2})", fname)
+        date_badge = f"@{{{date_match.group(1)}}} " if date_match else ""
 
         for i in range(len(lines)):
             line = lines[i]
@@ -75,7 +77,7 @@ def sync_daily_ideas():
                 file_modified = True
                 continue
 
-            card_text = f"- [ ] {clean_title} [[journal/{fname}|📅]]"
+            card_text = f"- [ ] {date_badge}{clean_title} [[journal/{fname}|📅]]"
             if extra_lines:
                 card_text += "\n\t" + "\n\t".join(extra_lines)
 
@@ -91,7 +93,7 @@ def sync_daily_ideas():
             lines[i] = lines[i].rstrip("\n") + f" {PROCESSED_MARKER}\n"
             file_modified = True
             total_imported += 1
-            print(f"Added to {matched_tag}: {clean_title}")
+            print(f"Added to {matched_tag}: {date_badge}{clean_title}")
 
         if file_modified:
             with open(fpath, "w", encoding="utf-8") as f:
