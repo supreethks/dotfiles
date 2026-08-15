@@ -1,0 +1,14 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+add_newline = false
+
+# Left prompt (keep it tidy)
+format = "$directory$git_branch$git_status$character"
+
+# OPTIONAL: right-side time (right prompt)
+right_format = "$time"
+
+[time]
+disabled = false
+time_format = "%H:%M"           # 24h; change as you like
+format = "[$time]($style)"
+style = "bold dimmed"

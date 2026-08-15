@@ -1,0 +1,7 @@
+# Template for machine-specific secrets and local overrides
+# Copy this file to ~/.zshrc.local and fill in your values
+
+# export FIREBASE_IOS_APP_ID=""
+# export APP_STORE_CONNECT_API_KEY_ID=""
+# export APP_STORE_CONNECT_ISSUER_ID=""
+# export GMAIL_APP_PASSWORD=""

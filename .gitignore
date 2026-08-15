@@ -1,0 +1,17 @@
+# Ignore OS and editor temp files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Ignore secrets and local files
+*.local
+*.secrets
+.zshrc.local
+.env
+.env.*
+!.env.example
+
+# Ignore transient caches
+automatic_backups/
+.neoconf.json

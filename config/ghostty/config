@@ -1,0 +1,19 @@
+# --- Aesthetics ---
+theme = "light:Tokyo Night Day,dark:Tokyo Night"   # built-in themes; switch auto with OS
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14.0
+
+# Nice padding & balanced edges
+window-padding-x = 12
+window-padding-y = 8
+window-padding-balance = true
+
+# Subtle translucent background with blur (macOS)
+background-opacity = 0.92
+background-blur = 30
+
+# Minimal titlebar on macOS
+macos-titlebar-style = transparent
+
+# --- Start tmux automatically (first terminal only) ---
+initial-command = "/bin/zsh -lc ~/.config/ghostty/tmux_ghostty.sh"
