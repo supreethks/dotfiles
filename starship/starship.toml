@@ -1,14 +1,103 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║  Starship Prompt – Minimal & Informative                           ║
+# ║  Kanagawa-inspired palette                                         ║
+# ╚══════════════════════════════════════════════════════════════════════╝
 "$schema" = 'https://starship.rs/config-schema.json'
 add_newline = false
 
-# Left prompt (keep it tidy)
-format = "$directory$git_branch$git_status$character"
+# ── Prompt Layout ────────────────────────────────────────────────────────
+format = """
+$directory\
+$git_branch\
+$git_status\
+$git_state\
+$rust\
+$python\
+$nodejs\
+$java\
+$golang\
+$docker_context\
+$cmd_duration\
+$line_break\
+$character"""
 
-# OPTIONAL: right-side time (right prompt)
 right_format = "$time"
 
+# ── Character ────────────────────────────────────────────────────────────
+[character]
+success_symbol = "[❯](bold #7E9CD8)"    # Kanagawa blue
+error_symbol = "[❯](bold #E46876)"      # Kanagawa red
+vimcmd_symbol = "[❮](bold #98BB6C)"     # Kanagawa green
+
+# ── Directory ────────────────────────────────────────────────────────────
+[directory]
+truncation_length = 4
+truncation_symbol = "…/"
+style = "bold #DCD7BA"                   # Kanagawa foreground
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Projects" = " "
+"dotfiles" = " "
+
+# ── Git ──────────────────────────────────────────────────────────────────
+[git_branch]
+symbol = " "
+style = "bold #957FB8"                   # Kanagawa violet
+
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "bold #FF9E3B"                   # Kanagawa orange
+conflicted = "="
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked = "?${count}"
+stashed = "*"
+modified = "!${count}"
+staged = "+${count}"
+renamed = "»"
+deleted = "✘"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "bold #E46876"
+
+# ── Languages (show only when relevant files detected) ───────────────────
+[rust]
+symbol = "🦀 "
+style = "bold #FF9E3B"
+
+[python]
+symbol = " "
+style = "bold #98BB6C"
+
+[nodejs]
+symbol = " "
+style = "bold #98BB6C"
+
+[java]
+symbol = " "
+style = "bold #E46876"
+
+[golang]
+symbol = " "
+style = "bold #7E9CD8"
+
+[docker_context]
+symbol = " "
+style = "bold #7E9CD8"
+
+# ── Command Duration ─────────────────────────────────────────────────────
+[cmd_duration]
+min_time = 2_000                         # show if > 2s
+format = "[$duration]($style) "
+style = "bold #54546D"                   # Kanagawa dimmed
+
+# ── Time (right side) ───────────────────────────────────────────────────
 [time]
 disabled = false
-time_format = "%H:%M"           # 24h; change as you like
+time_format = "%H:%M"
 format = "[$time]($style)"
 style = "bold dimmed"

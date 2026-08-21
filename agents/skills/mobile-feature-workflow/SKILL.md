@@ -20,9 +20,14 @@ ls android ios 2>/dev/null      # which platforms exist?
 
 No `forgejo` remote, or no mobile directories — this skill does not apply. Fall back to the repo's own conventions and say so rather than inventing a Forgejo flow.
 
-**Obsidian Project Context**:
+**Obsidian Project Context & Backlog Intake**:
 - For **Yorely**: Check `/Users/supreethks/docs/obsidian/main-vault/projects/yorely/` (`yorely.md`, `Kanban.md`, `PRD.md`)
 - For **Kagga**: Check `/Users/supreethks/docs/obsidian/main-vault/projects/kagga/` (`kagga.md`, `Kanban.md`, `PRD.md`)
+- **If triggered by "let's work on the backlog"**:
+  1. Pull backlog items (`python3 /Users/supreethks/.agents/skills/obsidian-project-tracker/scripts/backlog_helper.py list <yorely|kagga> --column "Backlog"`).
+  2. Present the backlog tasks and ask the user to pick.
+  3. **Conduct the Mandatory "Grill-Me" Interview**: Clarify user flows, design specifications, Android/iOS parity expectations, edge cases, and test strategies before cutting a branch.
+  4. Move the task to `## 🚧 In Progress` in `Kanban.md`.
 
 ## 1. Start on a clean branch
 

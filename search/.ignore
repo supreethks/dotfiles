@@ -1,0 +1,45 @@
+# macOS & System
+Library/
+Applications/
+System/
+Network/
+Volumes/
+.Trash/
+.DS_Store
+
+# Virtual Environments
+myenv/
+venv/
+.venv/
+env/
+.env/
+__pycache__/
+
+# Go
+go/pkg/
+go/bin/
+
+# Node
+node_modules/
+.npm/
+
+# Rust
+.cargo/
+.rustup/
+target/
+
+# Mobile & OS
+.android/
+.gradle/
+.cocoapods/
+Pods/
+
+# Caches & Tooling
+.cache/
+.local/
+.gemini/
+.cursor/
+.vscode/
+.m2/
+.docker/
+.docker/

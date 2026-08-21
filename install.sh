@@ -39,8 +39,11 @@ link_file "$DOTFILES_DIR/config/kitty" "$HOME/.config/kitty"
 link_file "$DOTFILES_DIR/config/ghostty" "$HOME/.config/ghostty"
 link_file "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
 
-# 3. Agent Skills
+# 3. Agent Skills & Search Config
 link_file "$DOTFILES_DIR/agents/skills" "$HOME/.agents/skills"
+link_file "$DOTFILES_DIR/search/.ignore" "$HOME/.ignore"
+link_file "$DOTFILES_DIR/search/.ignore" "$HOME/.fdignore"
+link_file "$DOTFILES_DIR/search/.ignore" "$HOME/.rgignore"
 
 # 4. Local secrets setup
 if [ ! -f "$HOME/.zshrc.local" ]; then

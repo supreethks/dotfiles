@@ -1,126 +1,15 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║  Zsh Configuration (.zshrc)                                          ║
+# ║  Optimized for Ghostty + Tmux + Starship + Modern CLI tools          ║
+# ╚══════════════════════════════════════════════════════════════════════╝
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time Oh My Zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+# Disable automatic update prompting (let it update in background)
+zstyle ':omz:update' mode auto
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch $(uname -m)"
-
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# This overrides venv python
-# alias python="python3"
-# alias pip="pip3"
-
-
-# Android sdk variables
-ANDROID_SDK_ROOT="/Users/supreethks/Library/Android/sdk"
-export JAVA_HOME="$(brew --prefix openjdk@17)/libexec/openjdk.jdk/Contents/Home"
-export PATH="$JAVA_HOME/bin:$PATH"
-
-# Enable command auto-completion
-autoload -Uz compinit
-compinit
-
-# Oh My Zsh configuration
-export ZSH="$HOME/.oh-my-zsh"
-
-# Enable plugins
+# Oh My Zsh plugins
 plugins=(
   git
   zsh-autosuggestions
@@ -129,52 +18,97 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# Load zsh-autosuggestions
-source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Load zsh-autosuggestions & zsh-syntax-highlighting if custom paths exist
+[[ -f ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+[[ -f ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# Load zsh-syntax-highlighting
-source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-
-# Created by `pipx` on 2025-06-05 04:07:12
-export PATH="$PATH:/Users/supreethks/.local/bin"
-#alias python3="/opt/homebrew/bin/python3"
-#alias python="/opt/homebrew/bin/python3"
+# ── Environment & Path ───────────────────────────────────────────────────
 eval "$(/opt/homebrew/bin/brew shellenv)"
-export PATH="$HOME/.local/bin:$PATH"
 
-# Kitty shell integration (enable richer features in kitty)
-# Only set install dir when running inside Kitty
-if [[ -n "$KITTY_PID" && -z "$KITTY_INSTALLATION_DIR" && -d "/Applications/kitty.app/Contents/Resources/kitty" ]]; then
-  export KITTY_INSTALLATION_DIR="/Applications/kitty.app/Contents/Resources/kitty"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="/Users/supreethks/.antigravity/antigravity/bin:$PATH"
+export PATH="$HOME/.maestro/bin:$PATH"
+
+# Android SDK
+export ANDROID_SDK_ROOT="/Users/supreethks/Library/Android/sdk"
+export JAVA_HOME="$(brew --prefix openjdk@17)/libexec/openjdk.jdk/Contents/Home"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# ── Modern CLI Aliases & Replacements ────────────────────────────────────
+
+# eza (modern ls replacement)
+if (( $+commands[eza] )); then
+  alias ls="eza --icons=always --group-directories-first"
+  alias la="eza -a --icons=always --group-directories-first"
+  alias ll="eza -l --icons=always --group-directories-first --git"
+  alias lla="eza -la --icons=always --group-directories-first --git"
+  alias tree="eza --tree --icons=always --level=3"
 fi
-if [[ -n "$KITTY_INSTALLATION_DIR" ]]; then
+
+# bat (modern cat replacement with syntax highlighting)
+if (( $+commands[bat] )); then
+  alias cat="bat --style=plain"
+  alias preview="bat --color=always"
+  export BAT_THEME="ansi" # Matches terminal theme naturally
+fi
+
+# fzf (fuzzy finder options)
+if (( $+commands[fzf] )); then
+  # Exclude system/cache directories from search
+  export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude Library --exclude Applications --exclude System --exclude '.cache' --exclude '.npm' --exclude '.cargo' --exclude '.gemini' --exclude '.rustup' --exclude '.local' --exclude '.cocoapods' --exclude '.android' --exclude '.cursor' --exclude '.gradle'"
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND="fd --type d --hidden --follow --exclude Library --exclude Applications --exclude System --exclude '.cache' --exclude '.npm' --exclude '.cargo' --exclude '.gemini' --exclude '.rustup' --exclude '.local' --exclude '.cocoapods' --exclude '.android' --exclude '.cursor' --exclude '.gradle'"
+
+  # Larger preview window (60% width) and scroll/wrap options
+  export FZF_DEFAULT_OPTS="--height 85% --layout=reverse --border --color=16 --preview-window=right:60%:wrap"
+
+  # Rich preview command for files, photos (using chafa), and PDFs (using pdftotext or exiftool)
+  export FZF_CTRL_T_OPTS="--preview '
+    mime=\$(file --mime-type -b {})
+    if [[ \$mime =~ ^image/ ]]; then
+      chafa -s 70x35 {} 2>/dev/null || exiftool {}
+    elif [[ \$mime == \"application/pdf\" ]]; then
+      pdftotext -l 5 -layout {} - 2>/dev/null || exiftool {}
+    elif [[ -d {} ]]; then
+      eza --tree --level=2 --icons=always {}
+    else
+      bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {}
+    fi
+  '"
+fi
+
+# zoxide (smarter cd command)
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh)"
+  alias cd="z"
+fi
+
+# fastfetch (system info fetcher)
+if (( $+commands[fastfetch] )); then
+  alias fetch="fastfetch"
+fi
+
+# Kitty shell integration (only if running in Kitty)
+if [[ -n "$KITTY_PID" && -d "/Applications/kitty.app/Contents/Resources/kitty" ]]; then
+  export KITTY_INSTALLATION_DIR="/Applications/kitty.app/Contents/Resources/kitty"
   export KITTY_SHELL_INTEGRATION="enabled"
   autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
   kitty-integration
   unfunction kitty-integration
 fi
 
-# Starship 
+# ── Prompts & Shell Utils ───────────────────────────────────────────────
 eval "$(starship init zsh)"
+
+# Enable command auto-completion
+autoload -Uz compinit && compinit
+
 # Load local / machine-specific secrets and overrides if present
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
-# Added by Antigravity
-export PATH="/Users/supreethks/.antigravity/antigravity/bin:$PATH"
-export PATH=$PATH:$HOME/.maestro/bin
+# ── Custom Functions ─────────────────────────────────────────────────────
 
-# Added by Antigravity
-export PATH="/Users/supreethks/.antigravity/antigravity/bin:$PATH"
-
-
-# Added by Antigravity CLI installer
-export PATH="/Users/supreethks/.local/bin:$PATH"
-
-# Added by Antigravity
-export PATH="/Users/supreethks/.antigravity/antigravity/bin:$PATH"
-
-# Obsidian daily note helper (supports DDMMYY, DD-MM-YY, YYYY-MM-DD, or today)
+# Obsidian daily note helper
 obdaily() {
   local input="$1"
   local target_date

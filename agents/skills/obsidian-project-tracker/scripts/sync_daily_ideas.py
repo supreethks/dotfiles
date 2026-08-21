@@ -1,23 +1,46 @@
 #!/usr/bin/env python3
+"""
+sync_daily_ideas.py
+Scans daily journal files for `#project-tag` entries and syncs them automatically
+into the respective project's Kanban board under `## 📋 Backlog`.
+"""
+
 import os
 import re
 import glob
 
 VAULT_PATH = "/Users/supreethks/docs/obsidian/main-vault"
+PROJECTS_DIR = os.path.join(VAULT_PATH, "projects")
 JOURNAL_DIR = os.path.join(VAULT_PATH, "journal")
-
-TAG_MAP = {
-    "#vimark": "projects/vimark/Kanban.md",
-    "#yorely": "projects/yorely/Kanban.md",
-    "#kagga": "projects/kagga/Kanban.md",
-    "#eink": "projects/eink-templates/Kanban.md",
-    "#eink-templates": "projects/eink-templates/Kanban.md",
-    "#supernote": "projects/eink-templates/Kanban.md"
-}
 
 PROCESSED_MARKER = "📥"
 
+def get_project_kanbans():
+    """Dynamically maps tags (e.g. #vimark, #yorely, #kagga) to Kanban board filepaths."""
+    tag_map = {}
+    if not os.path.exists(PROJECTS_DIR):
+        return tag_map
+
+    for item in os.listdir(PROJECTS_DIR):
+        item_path = os.path.join(PROJECTS_DIR, item)
+        if os.path.isdir(item_path):
+            kanban_path = os.path.join(item_path, "Kanban.md")
+            if os.path.isfile(kanban_path):
+                clean_tag = f"#{item.lower()}"
+                tag_map[clean_tag] = kanban_path
+                # Add aliases if needed (e.g. #eink -> eink-templates)
+                if "-" in item:
+                    tag_map[f"#{item.replace('-', '').lower()}"] = kanban_path
+
+    # Common aliases
+    if "#einktemplates" in tag_map:
+        tag_map["#eink"] = tag_map["#einktemplates"]
+        tag_map["#supernote"] = tag_map["#einktemplates"]
+
+    return tag_map
+
 def sync_daily_ideas():
+    tag_map = get_project_kanbans()
     journal_files = glob.glob(os.path.join(JOURNAL_DIR, "*.md"))
     total_imported = 0
 
@@ -36,7 +59,7 @@ def sync_daily_ideas():
                 continue
 
             matched_tag = None
-            for tag in TAG_MAP:
+            for tag in tag_map:
                 if re.search(rf"(?:^|\s){re.escape(tag)}(?:\b|\s|$)", line, re.IGNORECASE):
                     matched_tag = tag.lower()
                     break
@@ -44,8 +67,7 @@ def sync_daily_ideas():
             if not matched_tag:
                 continue
 
-            target_kanban_rel = TAG_MAP[matched_tag]
-            target_kanban_path = os.path.join(VAULT_PATH, target_kanban_rel)
+            target_kanban_path = tag_map[matched_tag]
             if not os.path.exists(target_kanban_path):
                 continue
 

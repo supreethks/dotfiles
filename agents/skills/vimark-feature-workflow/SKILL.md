@@ -18,7 +18,13 @@ ls src-tauri package.json       # Tauri desktop app
 
 No `forgejo` remote, or no `src-tauri/` — this skill does not apply. For Android/iOS Forgejo repos use `mobile-feature-workflow` instead.
 
-**Obsidian Project Context**: Check `/Users/supreethks/docs/obsidian/main-vault/projects/vimark/` (`vimark.md`, `Kanban.md`, and `PRD.md`) to establish context on active sprint tasks and architectural constraints.
+**Obsidian Project Context & Backlog Intake**:
+- Check `/Users/supreethks/docs/obsidian/main-vault/projects/vimark/` (`vimark.md`, `Kanban.md`, `PRD.md`).
+- **If triggered by "let's work on the backlog"**:
+  1. Pull backlog items (`python3 /Users/supreethks/.agents/skills/obsidian-project-tracker/scripts/backlog_helper.py list vimark --column "Backlog"`).
+  2. Present the backlog tasks and ask the user to pick.
+  3. **Conduct the Mandatory "Grill-Me" Interview**: Clarify exact UI/UX behaviour, keyboard shortcuts, error states, and Rust/TS contracts before cutting a branch.
+  4. Move the task to `## 🚧 In Progress` in `Kanban.md`.
 
 ## 1. Start on a clean branch
 
