@@ -37,6 +37,7 @@ link_file "$DOTFILES_DIR/config/aerospace" "$HOME/.config/aerospace"
 link_file "$DOTFILES_DIR/config/karabiner" "$HOME/.config/karabiner"
 link_file "$DOTFILES_DIR/config/kitty" "$HOME/.config/kitty"
 link_file "$DOTFILES_DIR/config/ghostty" "$HOME/.config/ghostty"
+link_file "$DOTFILES_DIR/config/zellij" "$HOME/.config/zellij"
 link_file "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
 
 # 3. Agent Skills & Search Config

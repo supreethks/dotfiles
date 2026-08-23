@@ -108,6 +108,16 @@ autoload -Uz compinit && compinit
 
 # ── Custom Functions ─────────────────────────────────────────────────────
 
+# Automatically create aliases for ~/development/project-* directories
+for dir in ~/development/project-*/; do
+  if [[ -d "$dir" ]]; then
+    proj_name=$(basename "$dir")
+    alias_name="${proj_name#project-}"
+    alias "$alias_name"="cd $dir"
+  fi
+done
+
+
 # Obsidian daily note helper
 obdaily() {
   local input="$1"

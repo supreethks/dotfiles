@@ -36,14 +36,16 @@
 	ignorecase = false
 	editor = code --wait
 	autocrlf = input
-	pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = delta
 	[merge]
 	   tool = studio
+	conflictstyle = diff3
 	[mergetool "studio"]
 	   cmd = studio merge $(cd $(dirname $LOCAL) && pwd)/$(basename $LOCAL) $(cd $(dirname $REMOTE) && pwd)/$(basename $REMOTE) $(cd $(dirname $BASE) && pwd)/$(basename $BASE) $(cd $(dirname $MERGED) && pwd)/$(basename $MERGED)
 	   trustExitCode = true
 	[diff]
 	   tool = studio
+	colorMoved = default
 	[difftool "studio"]
 	   cmd = studio diff $(cd $(dirname $LOCAL) && pwd)/$(basename $LOCAL) $(cd $(dirname $REMOTE) && pwd)/$(basename $REMOTE)
 
@@ -326,3 +328,21 @@
 	directory = /Users/supreethks/.cache/act/443f7de09fdc5635/hostexecutor
 	directory = /Users/supreethks/.cache/act/420ef4aa5f4ffa99/hostexecutor
 	directory = /Users/supreethks/.cache/act/420ef4aa5f4ffa99/hostexecutor
+	directory = /Users/supreethks/.cache/act/e8fc0c5ae5e083ec/hostexecutor
+	directory = /Users/supreethks/.cache/act/e8fc0c5ae5e083ec/hostexecutor
+	directory = /Users/supreethks/.cache/act/7978bcda59becc80/hostexecutor
+	directory = /Users/supreethks/.cache/act/7978bcda59becc80/hostexecutor
+	directory = /Users/supreethks/.cache/act/9e247e7dcc8e2d11/hostexecutor
+	directory = /Users/supreethks/.cache/act/9e247e7dcc8e2d11/hostexecutor
+	directory = /Users/supreethks/.cache/act/9d6fca4bcad32d9f/hostexecutor
+	directory = /Users/supreethks/.cache/act/9d6fca4bcad32d9f/hostexecutor
+	directory = /Users/supreethks/.cache/act/beaf7d96c984d335/hostexecutor
+	directory = /Users/supreethks/.cache/act/beaf7d96c984d335/hostexecutor
+	directory = /Users/supreethks/.cache/act/1d7abbcbc301262a/hostexecutor
+	directory = /Users/supreethks/.cache/act/1d7abbcbc301262a/hostexecutor
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	dark = true
+	side-by-side = true

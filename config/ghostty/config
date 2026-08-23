@@ -82,4 +82,4 @@ keybind = cmd+minus=decrease_font_size:1
 keybind = cmd+zero=reset_font_size
 
 # ── Start tmux automatically ────────────────────────────────────────────
-command = /bin/zsh -lc ~/.config/ghostty/tmux_ghostty.sh
+# command = /bin/zsh -lc ~/.config/ghostty/tmux_ghostty.sh
