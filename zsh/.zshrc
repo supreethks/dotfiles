@@ -42,6 +42,7 @@ if (( $+commands[eza] )); then
   alias la="eza -a --icons=always --group-directories-first"
   alias ll="eza -l --icons=always --group-directories-first --git"
   alias lla="eza -la --icons=always --group-directories-first --git"
+  alias lt="eza -l --sort=modified --reverse --group-directories-last --no-permissions --no-user --icons=always"
   alias tree="eza --tree --icons=always --level=3"
 fi
 
@@ -75,6 +76,11 @@ if (( $+commands[fzf] )); then
       bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {}
     fi
   '"
+
+  # Find & Open Aliases (bypasses Zellij Ctrl+T conflict)
+  alias fo="open \$(fzf)"
+  alias fc="cursor \$(fzf)"
+  alias fv="nvim \$(fzf)"
 fi
 
 # zoxide (smarter cd command)
