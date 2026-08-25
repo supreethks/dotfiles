@@ -152,3 +152,7 @@ else:
 
   obsidian open "journal/${target_date}" -v main-vault
 }
+
+# ── App Aliases ─────────────────────────────────────────────────────────
+alias zj="zellij"
+alias h="herdr"

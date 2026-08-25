@@ -29,6 +29,15 @@ Vault Location: `/Users/supreethks/docs/obsidian/main-vault`
 4. **Pre-Tool Verification**:
    - Before executing any file write, edit, replace, or deletion tool (`write_to_file`, `replace_file_content`, `run_command` with filesystem mutation), the agent **MUST** verify that the target path is strictly contained within `/Users/supreethks/docs/obsidian/main-vault/projects/<project-slug>/` or the active project workspace.
    - If an operation would touch files outside the project boundary, the agent MUST immediately abort the operation and request explicit confirmation.
+5. **New File Creation Policy**:
+   - When creating ANY new file in the vault (except journal notes), the filename MUST be prefixed with the current date in `YYYYMMDD - ` format (e.g., `20260825 - My Note.md`).
+   - The file MUST include YAML front matter indicating it was created by an agent:
+     ```yaml
+     ---
+     created_by: agent
+     date: YYYY-MM-DD
+     ---
+     ```
 
 ---
 

@@ -1,0 +1,20 @@
+layout {
+    pane size=1 borderless=true {
+        plugin location="tab-bar"
+    }
+    pane
+    pane size=1 borderless=true {
+        plugin location="status-bar"
+    }
+
+    swap_floating_layout {
+        floating_panes max_panes=1 {
+            pane {
+                x "25%"
+                y "0%"
+                width "50%"
+                height "100%"
+            }
+        }
+    }
+}

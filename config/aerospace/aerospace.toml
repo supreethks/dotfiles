@@ -201,6 +201,14 @@ on-mode-changed = []
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
+    
+    # Toggle Passthrough Mode (Suspends AeroSpace for apps like Ghostty/Zellij)
+    alt-0 = 'mode passthrough'
+
+# 'passthrough' binding mode declaration.
+# When active, AeroSpace ignores all keys except the one to exit passthrough.
+[mode.passthrough.binding]
+    alt-0 = 'mode main'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
