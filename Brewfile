@@ -1,0 +1,21 @@
+# Core command-line tools used by zsh/.zshrc and the dotfiles setup.
+brew "bat"
+brew "chafa"
+brew "eza"
+brew "exiftool"
+brew "fastfetch"
+brew "fd"
+brew "fzf"
+brew "git"
+brew "neovim"
+brew "openjdk@17"
+brew "poppler"
+brew "python"
+brew "ripgrep"
+brew "starship"
+brew "zellij"
+brew "zoxide"
+
+# Terminal and icon font used by config/ghostty/config.
+cask "ghostty"
+cask "font-jetbrains-mono-nerd-font"

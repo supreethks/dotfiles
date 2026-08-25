@@ -29,9 +29,18 @@ Custom configuration files, shell scripts, window management rules, and AI agent
 # 1. Clone your dotfiles
 git clone <your-repo-url> ~/dotfiles
 
-# 2. Run the installer (backs up existing files and creates symlinks)
-cd ~/dotfiles && ./install.sh
+# 2. Install Homebrew tools, Ghostty, Nerd Font, agent CLIs, Oh My Zsh, and plugins
+cd ~/dotfiles && ./install-requirements.sh
 
-# 3. Add any machine-specific secrets to ~/.zshrc.local
+# 3. Run the installer (backs up existing files and creates symlinks)
+./install.sh
+
+# 4. Add any machine-specific secrets to ~/.zshrc.local
 # (e.g. API keys, passwords)
 ```
+
+`install-requirements.sh` is safe to run again on another macOS machine. It uses
+the `Brewfile` for repeatable Homebrew installs and does not remove packages
+that are not listed there. It uses each tool's official shell installer for
+Herdr, Codex, Claude Code, AGY, and Cursor Agent when they are missing;
+authentication remains a one-time manual step for each tool.
