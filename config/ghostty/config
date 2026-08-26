@@ -60,6 +60,17 @@ keybind = super+arrow_right=text:\x00l
 keybind = super+arrow_up=text:\x00u
 keybind = super+arrow_down=text:\x00d
 
+# Forward Command+1..9 to Herdr tab switching (Ctrl+Space + 1..9)
+keybind = super+1=text:\x001
+keybind = super+2=text:\x002
+keybind = super+3=text:\x003
+keybind = super+4=text:\x004
+keybind = super+5=text:\x005
+keybind = super+6=text:\x006
+keybind = super+7=text:\x007
+keybind = super+8=text:\x008
+keybind = super+9=text:\x009
+
 # Splits (Cmd+D / Cmd+Shift+D like iTerm)
 keybind = cmd+d=new_split:right
 keybind = cmd+shift+d=new_split:down

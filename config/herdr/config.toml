@@ -5,6 +5,7 @@ show_agent_labels_on_pane_borders = true
 
 [keys]
 prefix = "ctrl+space"
+switch_tab = "prefix+1..9"
 focus_pane_left = ""
 focus_pane_right = ""
 previous_tab = "prefix+h"
