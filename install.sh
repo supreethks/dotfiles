@@ -28,6 +28,7 @@ link_file() {
 
 # 1. Shell & Git
 link_file "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
+link_file "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.config/zsh/.zshrc"
 link_file "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
 link_file "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
 

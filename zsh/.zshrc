@@ -115,7 +115,7 @@ autoload -Uz compinit && compinit
 # ── Custom Functions ─────────────────────────────────────────────────────
 
 # Automatically create aliases for ~/development/project-* directories
-for dir in ~/development/project-*/; do
+for dir in ~/development/project-*/(N); do
   if [[ -d "$dir" ]]; then
     proj_name=$(basename "$dir")
     alias_name="${proj_name#project-}"
