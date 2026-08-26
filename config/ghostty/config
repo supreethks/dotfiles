@@ -53,6 +53,13 @@ quick-terminal-screen = main
 quick-terminal-animation-duration = 0.15
 
 # ── Keybindings ──────────────────────────────────────────────────────────
+# Forward Command arrows to Herdr's Ctrl+Space prefix (Ghostty otherwise
+# consumes these for prompt navigation or sends readline control bytes).
+keybind = super+arrow_left=text:\x00h
+keybind = super+arrow_right=text:\x00l
+keybind = super+arrow_up=text:\x00u
+keybind = super+arrow_down=text:\x00d
+
 # Splits (Cmd+D / Cmd+Shift+D like iTerm)
 keybind = cmd+d=new_split:right
 keybind = cmd+shift+d=new_split:down

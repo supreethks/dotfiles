@@ -5,6 +5,12 @@ show_agent_labels_on_pane_borders = true
 
 [keys]
 prefix = "ctrl+space"
+focus_pane_left = ""
+focus_pane_right = ""
+previous_tab = "prefix+h"
+next_tab = "prefix+l"
+previous_workspace = "prefix+u"
+next_workspace = "prefix+d"
 
 [ui.sidebar.agents]
 rows = [["state_text", "workspace", "tab"], ["agent"]]
