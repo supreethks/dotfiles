@@ -83,10 +83,9 @@ if (( $+commands[fzf] )); then
   alias fv="nvim \$(fzf)"
 fi
 
-# zoxide (smarter cd command)
+# zoxide (smarter directory jumping)
 if (( $+commands[zoxide] )); then
   eval "$(zoxide init zsh)"
-  alias cd="z"
 fi
 
 # fastfetch (system info fetcher)
@@ -112,14 +111,33 @@ autoload -Uz compinit && compinit
 # Load local / machine-specific secrets and overrides if present
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
-# ── Custom Functions ─────────────────────────────────────────────────────
+# ── Smart CD & Directory Navigation ───────────────────────────────────────
+cd() {
+  if (( $# == 0 )); then
+    builtin cd ~
+  elif [[ "$1" == "-" ]]; then
+    builtin cd -
+  elif builtin cd "$@" 2>/dev/null; then
+    return 0
+  elif [[ $# -eq 1 && -d "$HOME/development/project-$1" ]]; then
+    builtin cd "$HOME/development/project-$1"
+  elif [[ $# -eq 1 && -d "$HOME/development/$1" ]]; then
+    builtin cd "$HOME/development/$1"
+  elif (( $+commands[zoxide] )) && zoxide query "$@" &>/dev/null; then
+    builtin cd "$(zoxide query "$@")"
+  else
+    builtin cd "$@"
+  fi
+}
 
-# Automatically create aliases for ~/development/project-* directories
-for dir in ~/development/project-*/(N); do
+# Automatically create named directories (~name) and aliases for development folders
+for dir in ~/development/*/(N); do
   if [[ -d "$dir" ]]; then
-    proj_name=$(basename "$dir")
-    alias_name="${proj_name#project-}"
-    alias "$alias_name"="cd $dir"
+    dir_name=$(basename "$dir")
+    clean_name="${dir_name#project-}"
+    hash -d "$clean_name"="$dir"
+    hash -d "$dir_name"="$dir"
+    alias "$clean_name"="cd $dir"
   fi
 done
 

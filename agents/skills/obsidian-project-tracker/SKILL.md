@@ -1,6 +1,6 @@
 ---
 name: obsidian-project-tracker
-description: Universal Human-Agent project management, backlog intake, and feature lifecycle workflow for any software project tracked in Obsidian (/Users/supreethks/docs/obsidian/main-vault/projects/<project-name>/). Strictly confines all agent modifications inside the active project folder. Activates on "let's work on the backlog", "work on backlog", "pick a task from backlog", "what's next in the backlog", or at the START and END of any coding task to establish context, refine requirements ("grill-me"), track ADR decisions, and log session progress.
+description: Universal Human-Agent project management, backlog intake, and feature lifecycle workflow for any software project tracked in Obsidian (/Users/supreethks/docs/obsidian/main-vault/projects/<project-name>/). Strictly confines all agent modifications inside the active project folder. Activates on "let's work on the backlog", "work on backlog", "pick a task from backlog", "what's next in the backlog", or at the START and END of any coding task to establish context, refine requirements ("grill-with-docs"), track ADR decisions, and log session progress.
 ---
 
 # Universal Human-Agent Project Management & Feature Delivery Skill
@@ -79,7 +79,7 @@ Agents must **never hardcode project names**. Instead, dynamically resolve the p
 
 ```mermaid
 flowchart TD
-    A["Stage 1: Backlog Intake & Task Selection\n('let's work on the backlog')"] --> B["Stage 2: Mandatory 'Grill-Me' Interview\n(Drill down on specs, UX, edge cases, ADRs)"]
+    A["Stage 1: Backlog Intake & Task Selection\n('let's work on the backlog')"] --> B["Stage 2: Mandatory 'grill-with-docs' Interview\n(Drill down on specs, UX, edge cases, ADRs)"]
     B --> C["Stage 3: Clean Branch & Implementation\n(Code changes + ADR recording)"]
     C --> D["Stage 4: Verification & Test Backfilling\n(Manual check + Automate verification)"]
     D --> E["Stage 5: Session Wrap-Up & Vault Sync\n(Kanban 'Done', Work_Log, Issues)"]
@@ -99,8 +99,8 @@ flowchart TD
 
 ---
 
-### Stage 2: The Mandatory "Grill-Me" Interview Phase
-**CRITICAL**: Once a task is selected, **DO NOT start coding immediately**. The agent must conduct a structured requirements drill-down interview to eliminate ambiguity and prevent assumptions:
+### Stage 2: The Mandatory "grill-with-docs" Interview Phase
+**CRITICAL**: Once a task is selected, **DO NOT start coding immediately**. The agent must conduct a structured requirements drill-down interview to eliminate ambiguity and prevent assumptions by triggering the `grill-with-docs` skill:
 
 1. **User Experience & Interaction Flow**:
    - What is the step-by-step user journey from trigger to completion?

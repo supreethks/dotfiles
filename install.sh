@@ -40,6 +40,7 @@ link_file "$DOTFILES_DIR/config/kitty" "$HOME/.config/kitty"
 link_file "$DOTFILES_DIR/config/ghostty" "$HOME/.config/ghostty"
 link_file "$DOTFILES_DIR/config/zellij" "$HOME/.config/zellij"
 link_file "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
+link_file "$DOTFILES_DIR/config/herdr/config.toml" "$HOME/.config/herdr/config.toml"
 
 # 3. Agent Skills & Search Config
 link_file "$DOTFILES_DIR/agents/skills" "$HOME/.agents/skills"
