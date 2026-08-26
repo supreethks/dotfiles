@@ -81,8 +81,8 @@ Agents must **never hardcode project names**. Instead, dynamically resolve the p
 flowchart TD
     A["Stage 1: Backlog Intake & Task Selection\n('let's work on the backlog')"] --> B["Stage 2: Mandatory 'grill-with-docs' Interview\n(Drill down on specs, UX, edge cases, ADRs)"]
     B --> C["Stage 3: Clean Branch & Implementation\n(Code changes + ADR recording)"]
-    C --> D["Stage 4: Verification & Test Backfilling\n(Manual check + Automate verification)"]
-    D --> E["Stage 5: Session Wrap-Up & Vault Sync\n(Kanban 'Done', Work_Log, Issues)"]
+    C --> D["Stage 4: Verification, Adversarial Review & Tests\n(CI + Herdr/AGY Adversarial Quality Gate)"]
+    D --> E["Stage 5: Session Wrap-Up & Vault Sync\n(Kanban 'Done', Work_Log, Remote PR)"]
 ```
 
 ---
@@ -135,15 +135,21 @@ python3 /Users/supreethks/.agents/skills/obsidian-project-tracker/scripts/backlo
 
 ---
 
-### Stage 4: Verification & Test Backfilling
+### Stage 4: Verification, Adversarial Review & Test Backfilling
 1. **Run Project CI locally**: Match the exact CI workflow commands for the repo.
 2. **Interactive / Hardware Verification**: Verify in the running app (webview, desktop window, or mobile device).
 3. **Backfill Automated Tests**: Convert what was verified by hand into automated tests (Vitest, Playwright, Espresso, XCUITest).
+4. **Mandatory Adversarial Quality Gate & Auto-Loop (herdr-auto-loop)**:
+   - Run the autonomous multi-round adversarial review loop against base (`origin/main` or `forgejo/develop`):
+     ```bash
+     ~/.agents/skills/adversarial-review/scripts/herdr-auto-loop.sh <base_ref>
+     ```
+   - Automatically dispatches specialized stack reviewers in parallel, feeds any identified issues to the builder agent for automatic remediation, and re-evaluates until all reviewers output `VERDICT: APPROVED`.
 
 ---
 
 ### Stage 5: Session Wrap-Up & Remote PR / Obsidian Sync
-Upon completing implementation and verification:
+Upon completing implementation, verification, and adversarial approval:
 1. **Push Branch & Open Pull Request (MANDATORY)**:
    - Push the clean feature branch to the remote (`forgejo` or `origin`):
      ```bash
@@ -169,6 +175,7 @@ Upon completing implementation and verification:
    - **Changes Implemented**: <Key changes made>
    - **Files Modified**: `<path/to/file1>`, `<path/to/file2>`
    - **Verification**: <Manual verification notes and test suite results>
+   - **Adversarial Review**: ✔ Approved by `<reviewer_persona_1>`, `<reviewer_persona_2>`
    - **Pull Request**: Opened [PR #X](http://<host:port>/<owner>/<repo>/pulls/X) targeting `develop`.
    - **Next Steps / Blockers**: <Follow-ups or unblocked work>
    ```

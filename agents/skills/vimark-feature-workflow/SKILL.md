@@ -100,6 +100,16 @@ Manual verification is not the deliverable — encode it:
 
 Match neighbouring test style. If a behaviour cannot be automated (real browser native messaging, OS focus quirks), say so explicitly in the PR.
 
+## 5b. Run Adversarial Quality Gate & Auto-Loop
+ 
+Before staging or opening the PR, run the autonomous multi-round adversarial review loop to evaluate and auto-heal the patch against the base branch (`forgejo/develop` or `origin/main`):
+ 
+```bash
+~/.agents/skills/adversarial-review/scripts/herdr-auto-loop.sh forgejo/develop
+```
+ 
+All targeted reviewers (`reviewer_rust_backend`, `reviewer_tauri_frontend`, `reviewer_desktop_os`, `reviewer_extension_crossbrowser`, `reviewer_sec`, `reviewer_arch`) must return `VERDICT: APPROVED`. If blockers are flagged, the loop automatically dispatches them to the builder agent for remediation.
+
 ## 6. Commit and open the PR
 
 Review the diff before staging. Commit message explains **why**; follow `git log -15` style (`fix(ui): …`, `feat(…): …`, `behavior: …`).
