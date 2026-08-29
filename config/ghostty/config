@@ -107,6 +107,5 @@ keybind = cmd+zero=reset_font_size
 
 # Native macOS copy/paste
 keybind = super+c=copy_to_clipboard
+keybind = super+v=paste_from_clipboard
 
-# clipshot paste integration
-keybind = super+v=text:\x18\x16
