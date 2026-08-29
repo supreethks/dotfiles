@@ -100,15 +100,44 @@ Manual verification is not the deliverable — encode it:
 
 Match neighbouring test style. If a behaviour cannot be automated (real browser native messaging, OS focus quirks), say so explicitly in the PR.
 
-## 5b. Run Adversarial Quality Gate & Auto-Loop
+## 5b. Run Adversarial Code Quality Gate & Auto-Loop
  
-Before staging or opening the PR, run the autonomous multi-round adversarial review loop to evaluate and auto-heal the patch against the base branch (`forgejo/develop` or `origin/main`):
+Before staging or opening the PR, run the autonomous multi-round adversarial **code** review loop against the base branch (`forgejo/develop` or `origin/main`):
  
 ```bash
 ~/.agents/skills/adversarial-review/scripts/herdr-auto-loop.sh forgejo/develop
 ```
  
 All targeted reviewers (`reviewer_rust_backend`, `reviewer_tauri_frontend`, `reviewer_desktop_os`, `reviewer_extension_crossbrowser`, `reviewer_sec`, `reviewer_arch`) must return `VERDICT: APPROVED`. If blockers are flagged, the loop automatically dispatches them to the builder agent for remediation.
+
+## 5c. Run Adversarial UI / UX / Design Gate & Auto-Loop
+
+After desktop verification (step 4) and the code gate (5b), run the **UI/UX/design** adversarial gate whenever the diff touches window UI, React surfaces, or `website/`:
+
+```bash
+# Optional: point at screenshots from tauri MCP / Playwright / Peekaboo
+export UI_EVIDENCE_DIR=/tmp/vimark-ui-evidence
+~/.agents/skills/adversarial-ui-review/scripts/herdr-ui-auto-loop.sh forgejo/develop
+```
+
+Dispatches platform personas separately (`reviewer_ui_desktop`, `reviewer_ui_website`, …). Every finding must cite Nielsen / WCAG / HIG / Laws of UX. Any **Blocker** or **Critical** fails the gate. Skip only when the diff has no UI surfaces (script exits 0 with a skip message). See `adversarial-ui-review` skill.
+
+## 5d. Run Adversarial End-User QA Gate (mandatory before merge)
+
+Every PR must produce a **QA verification package** (global skill `adversarial-qa`) before merge.
+ViMark-specific settings live in the repo’s `.adversarial-qa.json` (Tart VM, build cmd, shortcut).
+
+```bash
+# Config loaded automatically from repo .adversarial-qa.json
+~/.agents/skills/adversarial-qa/scripts/run-qa-gate.sh forgejo/develop
+# Build unsigned debug .app, install into warm Tart VM from config, smoke + PRD,
+# ffmpeg video always on, then:
+#   QA_VERDICT=APPROVED ~/.agents/skills/adversarial-qa/scripts/finalize-qa-package.sh qa-packages/...
+```
+
+- Depth: **smoke + PRD acceptance only** (exploratory → nightly).
+- Taxonomy: Defects block · Observations do not · Infra → one retry → `INCONCLUSIVE`.
+- See global skill `adversarial-qa`. Attach package path + REPORT to the PR body.
 
 ## 6. Commit and open the PR
 
@@ -148,7 +177,7 @@ Upon PR creation or task completion:
 
 ## Reporting back
 
-State: branch + base, which checks ran, desktop verification notes, tests added, PR URL + check status, and Obsidian docs updated. If a step was skipped, say so plainly.
+State: branch + base, which checks ran, desktop verification notes, tests added, **code** adversarial gate + **UI** adversarial gate (personas + evidence) + **QA** package path/verdict, PR URL + check status, and Obsidian docs updated. If a step was skipped, say so plainly.
 
 ## Additional resources
 

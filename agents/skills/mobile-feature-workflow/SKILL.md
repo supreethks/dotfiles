@@ -167,6 +167,27 @@ Then run the new tests and confirm they pass against a device or emulator. Repor
 
 If the verified behaviour genuinely cannot be automated — it depends on an external app, a real purchase, a push notification — say so explicitly and explain why, so the gap is a known decision rather than an oversight.
 
+## 5b. Adversarial code + UI gates
+
+Before staging or opening the PR:
+
+1. **Code gate** (security, lifecycle, architecture):
+   ```bash
+   ~/.agents/skills/adversarial-review/scripts/herdr-auto-loop.sh forgejo/develop
+   ```
+2. **UI / UX / design gate** when Compose or SwiftUI screens changed (separate Android vs iOS personas; evidence-cited):
+   ```bash
+   export UI_EVIDENCE_DIR=/tmp/mobile-ui-evidence   # screenshots from step 4
+   ~/.agents/skills/adversarial-ui-review/scripts/herdr-ui-auto-loop.sh forgejo/develop
+   ```
+   Dispatches `reviewer_ui_android` and/or `reviewer_ui_ios`. Blocker/Critical findings fail the gate. See skill `adversarial-ui-review`.
+3. **End-user QA gate** (mandatory before merge — global `adversarial-qa`, config from repo `.adversarial-qa.json`):
+   ```bash
+   ~/.agents/skills/adversarial-qa/scripts/run-qa-gate.sh forgejo/develop
+   ```
+   Emulator / Simulator, smoke + PRD acceptance, always-on video, QA package.
+   Defects block merge; Observations do not; Infra → retry once → `INCONCLUSIVE`.
+
 ## 6. Commit and open the PR
 
 Review the diff before staging, especially generated files. `git diff <generated-file>` should contain only changes you intended; a stray version bump or reordered UUID block means something else edited it.
@@ -204,10 +225,10 @@ curl -s -u "$U:$P" "http://<host:port>/api/v1/repos/<owner>/<repo>/commits/$(git
 
 Upon PR creation or task completion:
 1. **Update Kanban**: Open the project board (`projects/yorely/Kanban.md` or `projects/kagga/Kanban.md`) and move the completed task to `## ✅ Done`.
-2. **Append Work Log**: Add a session summary to `Work_Log.md` with goal, modified files, verification notes (physical device vs emulator), and PR link.
+2. **Append Work Log**: Add a session summary to `Work_Log.md` with goal, modified files, verification notes (physical device vs emulator), adversarial code + UI + QA sign-off (package path), and PR link.
 3. **Record Decisions**: If an architectural choice was made, append an ADR entry in `Decisions.md`.
 
 ## Reporting back
 
-State what actually happened: the branch and base, test counts per platform, which devices were verified on and what was observed, the tests added, the PR URL and its check status, and Obsidian docs updated. If something was skipped — no device attached, a step blocked — say so plainly instead of leaving the user to infer it from silence.
+State what actually happened: the branch and base, test counts per platform, which devices were verified on and what was observed, the tests added, **code** adversarial gate + **UI** adversarial gate (Android/iOS personas + screenshot evidence) + **QA** package verdict/path, the PR URL and its check status, and Obsidian docs updated. If something was skipped — no device attached, a step blocked — say so plainly instead of leaving the user to infer it from silence.
 

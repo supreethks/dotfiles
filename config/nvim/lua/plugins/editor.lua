@@ -103,4 +103,11 @@ return {
       },
     },
   },
+
+  -- Herdr integration (annotations, file pick, agent reviews)
+  {
+    "ChmaraX/herdr-nvim",
+    opts = {},
+  },
 }
+

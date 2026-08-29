@@ -1,16 +1,6 @@
--- Language extras for LazyVim
+-- Language configuration for LazyVim
 -- Covers: TypeScript/JS, Python, Rust, Go, Markdown, Docker, YAML, TOML, JSON
 return {
-  -- LazyVim language extras (handles LSP + Treesitter + formatter per language)
-  { import = "lazyvim.plugins.extras.lang.typescript" },
-  { import = "lazyvim.plugins.extras.lang.python" },
-  { import = "lazyvim.plugins.extras.lang.rust" },
-  { import = "lazyvim.plugins.extras.lang.go" },
-  { import = "lazyvim.plugins.extras.lang.docker" },
-  { import = "lazyvim.plugins.extras.lang.yaml" },
-  { import = "lazyvim.plugins.extras.lang.toml" },
-  { import = "lazyvim.plugins.extras.lang.markdown" },
-  { import = "lazyvim.plugins.extras.lang.json" },
 
   -- Additional Treesitter parsers beyond what extras provide
   {

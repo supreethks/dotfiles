@@ -1,0 +1,22 @@
+{
+  "project": "example-app",
+  "tart_vm": "project-example-mac-sandbox",
+  "package_root": "qa-packages",
+  "debug_build_command": "npm run tauri build",
+  "primary_launch": {
+    "kind": "shortcut",
+    "value": "Cmd+Shift+Space"
+  },
+  "website_url": "http://127.0.0.1:4321",
+  "android": {
+    "package_id": "com.example.app.debug",
+    "main_activity": ".MainActivity",
+    "apk_path_glob": "android/app/build/outputs/apk/debug/*.apk"
+  },
+  "ios": {
+    "scheme": "ExampleApp",
+    "bundle_id": "com.example.app.debug",
+    "simulator_name": "iPhone 16"
+  },
+  "prd_glob": "**/*PRD*.md"
+}

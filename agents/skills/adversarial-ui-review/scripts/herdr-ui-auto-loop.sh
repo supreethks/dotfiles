@@ -16,14 +16,13 @@ REQUESTED_RUNNER="${2:-${LLM_RUNNER:-}}"
 MAX_ROUNDS="${MAX_ROUNDS:-4}"
 ROUND=1
 
-# Resolve LLM Agent CLI Runner
 select_runner() {
   local choice=""
   if [ -n "$REQUESTED_RUNNER" ]; then
     choice="$REQUESTED_RUNNER"
   elif [ -t 0 ] || [ -t 1 ]; then
     echo "======================================================"
-    echo " Select LLM Agent CLI Reviewer:"
+    echo " Select LLM Agent CLI Reviewer (adversarial UI loop):"
     echo "  1) agy (Google Antigravity CLI)"
     echo "  2) agy-claude (Antigravity CLI with Claude model)"
     echo "  3) cursor-agent (Cursor Agent CLI)"
@@ -40,7 +39,6 @@ select_runner() {
       *) choice="agy" ;;
     esac
   else
-    # Non-interactive fallback: detect available CLI
     if command -v agy >/dev/null 2>&1; then
       choice="agy"
     elif command -v codex >/dev/null 2>&1; then
@@ -70,7 +68,6 @@ select_runner() {
 
 select_runner
 
-# Cross-platform SHA256 helper
 compute_sha256() {
   if command -v sha256sum >/dev/null 2>&1; then
     sha256sum | awk '{print $1}'
@@ -79,8 +76,40 @@ compute_sha256() {
   fi
 }
 
+select_ui_reviewers() {
+  local CHANGED_FILES="$1"
+  local REVIEWERS=()
+  if [ -n "${UI_PLATFORMS:-}" ]; then
+    IFS=',' read -r -a FORCED <<< "$UI_PLATFORMS"
+    for p in "${FORCED[@]}"; do
+      case "$(echo "$p" | tr '[:upper:]' '[:lower:]' | xargs)" in
+        desktop) REVIEWERS+=("reviewer_ui_desktop.txt") ;;
+        website|web) REVIEWERS+=("reviewer_ui_website.txt") ;;
+        android) REVIEWERS+=("reviewer_ui_android.txt") ;;
+        ios) REVIEWERS+=("reviewer_ui_ios.txt") ;;
+      esac
+    done
+  else
+    if echo "$CHANGED_FILES" | grep -qE 'src-tauri/|tauri\.conf|src/components/|src/App\.(tsx|jsx|vue)|apps/.+/src/'; then
+      REVIEWERS+=("reviewer_ui_desktop.txt")
+    fi
+    if echo "$CHANGED_FILES" | grep -qE 'website/|\.astro$|\.html$'; then
+      REVIEWERS+=("reviewer_ui_website.txt")
+    fi
+    if echo "$CHANGED_FILES" | grep -qE 'android/|\.kt$'; then
+      REVIEWERS+=("reviewer_ui_android.txt")
+    fi
+    if echo "$CHANGED_FILES" | grep -qE 'ios/|\.swift$|\.storyboard$|\.xib$'; then
+      REVIEWERS+=("reviewer_ui_ios.txt")
+    fi
+  fi
+  if [ ${#REVIEWERS[@]} -gt 0 ]; then
+    printf '%s\n' "${REVIEWERS[@]}" | awk 'NF && !seen[$0]++'
+  fi
+}
+
 echo "======================================================"
-echo " Starting Autonomous Adversarial Review Loop (via $LLM_RUNNER)"
+echo " Starting Autonomous Adversarial UI Review Loop (via $LLM_RUNNER)"
 echo " Base Target: $BASE_REF | Max Iterations: $MAX_ROUNDS"
 echo "======================================================"
 
@@ -96,6 +125,22 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
+run_reviewer() {
+  local PROMPT_FILE="$1"
+  local PAYLOAD="$2"
+  if [ "$LLM_RUNNER" = "agy" ]; then
+    echo "$PAYLOAD" | agy -p "$(cat "$PROMPT_FILE")" --dangerously-skip-permissions --print-timeout 15m0s 2>&1 || true
+  elif [ "$LLM_RUNNER" = "agy-claude" ]; then
+    echo "$PAYLOAD" | agy -m "Claude 3.7 Sonnet" -p "$(cat "$PROMPT_FILE")" --dangerously-skip-permissions --print-timeout 15m0s 2>&1 || true
+  elif [ "$LLM_RUNNER" = "cursor-agent" ]; then
+    echo "$PAYLOAD" | cursor-agent -p "$(cat "$PROMPT_FILE")" --output-format text 2>&1 || true
+  elif [ "$LLM_RUNNER" = "codex" ]; then
+    echo "$PAYLOAD" | codex exec "$(cat "$PROMPT_FILE")" 2>&1 || true
+  else
+    echo "$PAYLOAD" | claude -p "$(cat "$PROMPT_FILE")" 2>&1 || true
+  fi
+}
+
 while [ "$ROUND" -le "$MAX_ROUNDS" ]; do
   echo -e "\n[Round $ROUND/$MAX_ROUNDS] Computing current diff against $BASE_REF..."
 
@@ -106,7 +151,6 @@ while [ "$ROUND" -le "$MAX_ROUNDS" ]; do
     exit 0
   fi
 
-  # Circuit Breaker: Prevent infinite loop if diff did not change
   CURR_DIFF_HASH=$(echo "$DIFF" | compute_sha256)
   if [ "$CURR_DIFF_HASH" == "$PREV_DIFF_HASH" ]; then
     echo "✖ Error: The diff did not change after builder run. Breaking loop to prevent thrashing."
@@ -114,31 +158,25 @@ while [ "$ROUND" -le "$MAX_ROUNDS" ]; do
   fi
   PREV_DIFF_HASH="$CURR_DIFF_HASH"
 
-  # Dynamically determine active stack reviewers based on modified files
   CHANGED_FILES=$(git diff --name-only "$BASE_REF" -- 2>/dev/null || git diff --name-only --)
   REVIEWERS=()
-
-  if echo "$CHANGED_FILES" | grep -qE '\.rs$|Cargo\.(toml|lock)'; then
-    REVIEWERS+=("reviewer_rust_backend.txt")
-  fi
-  if echo "$CHANGED_FILES" | grep -qE 'src-tauri|tauri\.conf\.json'; then
-    REVIEWERS+=("reviewer_tauri_frontend.txt" "reviewer_desktop_os.txt")
-  fi
-  if echo "$CHANGED_FILES" | grep -qE 'manifest\.json|extension/'; then
-    REVIEWERS+=("reviewer_extension_crossbrowser.txt")
-  fi
-  if echo "$CHANGED_FILES" | grep -qE 'android/|ios/|\.kt$|\.swift$'; then
-    REVIEWERS+=("reviewer_mobile_native.txt")
-  fi
-  if echo "$CHANGED_FILES" | grep -qE 'workers/|wrangler\.(toml|jsonc)|sync/'; then
-    REVIEWERS+=("reviewer_cloudflare_sync.txt")
-  fi
+  while IFS= read -r rev; do
+    [ -n "$rev" ] && REVIEWERS+=("$rev")
+  done < <(select_ui_reviewers "$CHANGED_FILES")
 
   if [ ${#REVIEWERS[@]} -eq 0 ]; then
-    REVIEWERS=("reviewer_sec.txt" "reviewer_arch.txt")
+    echo "No UI surfaces in diff; adversarial-ui-review skipped."
+    exit 0
   fi
 
-  echo "[Round $ROUND] Running ${#REVIEWERS[@]} adversarial reviewers in parallel via $LLM_RUNNER: ${REVIEWERS[*]}"
+  EVIDENCE_NOTE=""
+  if [ -n "${UI_EVIDENCE_DIR:-}" ] && [ -d "$UI_EVIDENCE_DIR" ]; then
+    EVIDENCE_NOTE=$'\n\n=== UI EVIDENCE FILES ===\n'
+    EVIDENCE_NOTE+="$(find "$UI_EVIDENCE_DIR" -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.webp' -o -name '*.md' -o -name '*.txt' \) | head -40)"
+  fi
+  PAYLOAD="${DIFF}${EVIDENCE_NOTE}"
+
+  echo "[Round $ROUND] Running ${#REVIEWERS[@]} UI reviewers in parallel via $LLM_RUNNER: ${REVIEWERS[*]}"
 
   PIDS=()
   TEMP_FILES=()
@@ -148,22 +186,10 @@ while [ "$ROUND" -le "$MAX_ROUNDS" ]; do
     PROMPT_FILE="${PROMPTS_DIR}/$REV"
     TF=$(mktemp)
     TEMP_FILES+=("$TF")
-
-    if [ "$LLM_RUNNER" = "agy" ]; then
-      (echo "$DIFF" | agy -p "$(cat "$PROMPT_FILE")" --dangerously-skip-permissions --print-timeout 15m0s > "$TF" 2>&1 || true) &
-    elif [ "$LLM_RUNNER" = "agy-claude" ]; then
-      (echo "$DIFF" | agy -m "Claude 3.7 Sonnet" -p "$(cat "$PROMPT_FILE")" --dangerously-skip-permissions --print-timeout 15m0s > "$TF" 2>&1 || true) &
-    elif [ "$LLM_RUNNER" = "cursor-agent" ]; then
-      (echo "$DIFF" | cursor-agent -p "$(cat "$PROMPT_FILE")" --output-format text > "$TF" 2>&1 || true) &
-    elif [ "$LLM_RUNNER" = "codex" ]; then
-      (echo "$DIFF" | codex exec "$(cat "$PROMPT_FILE")" > "$TF" 2>&1 || true) &
-    else
-      (echo "$DIFF" | claude -p "$(cat "$PROMPT_FILE")" > "$TF" 2>&1 || true) &
-    fi
+    (run_reviewer "$PROMPT_FILE" "$PAYLOAD" > "$TF" 2>&1 || true) &
     PIDS+=($!)
   done
 
-  # Wait for all parallel reviewers
   for pid in "${PIDS[@]}"; do
     wait "$pid"
   done
@@ -181,44 +207,44 @@ while [ "$ROUND" -le "$MAX_ROUNDS" ]; do
     else
       ALL_APPROVED=false
       echo "  ✖ $REV: ISSUES FOUND"
-      FEEDBACK_ITEMS+=$'\n\n'"=== Reviewer: ${REV} ==="$'\n'"${OUT}"
+      FEEDBACK_ITEMS+=$'\n\n'"=== UI Reviewer: ${REV} ==="$'\n'"${OUT}"
     fi
   done
 
-  # Clean temporary files for this round
   cleanup
   TEMP_FILES=()
 
   if [ "$ALL_APPROVED" = true ]; then
     echo -e "\n======================================================"
-    echo "✔ SUCCESS: All adversarial reviewers approved the changes!"
+    echo "✔ SUCCESS: All adversarial UI reviewers approved the changes!"
     echo "======================================================"
     exit 0
   fi
 
-  FEEDBACK_PAYLOAD="You have received adversarial critique on your latest diff from specialized reviewers.
-Review their feedback carefully, edit the files to fix every valid issue, ensure build/tests pass, and do NOT exit until all changes are written.
+  FEEDBACK_PAYLOAD="You have received adversarial UI/UX/design critique on your latest diff.
+Fix every Blocker and Critical with concrete UI changes (layout, a11y, states, platform conventions).
+Re-check visually if possible. Do NOT exit until fixes are written.
 ${FEEDBACK_ITEMS}"
 
-  echo -e "\n[Round $ROUND] Dispatching feedback to Main Builder Agent ($LLM_RUNNER)..."
+  echo -e "\n[Round $ROUND] Dispatching UI feedback to Main Builder Agent ($LLM_RUNNER)..."
 
   if [ -n "${HERDR_SESSION_ID:-}" ]; then
     herdr send --session "$HERDR_SESSION_ID" --await-completion "$FEEDBACK_PAYLOAD"
   elif [ "$LLM_RUNNER" = "agy" ]; then
-    echo "$FEEDBACK_PAYLOAD" | agy -p "Fix the code according to the adversarial feedback. Edit files until issues are resolved." --dangerously-skip-permissions --print-timeout 20m0s
+    echo "$FEEDBACK_PAYLOAD" | agy -p "Fix the UI according to the adversarial UI feedback. Edit files until Blockers/Criticals are resolved." --dangerously-skip-permissions --print-timeout 20m0s
   elif [ "$LLM_RUNNER" = "agy-claude" ]; then
-    echo "$FEEDBACK_PAYLOAD" | agy -m "Claude 3.7 Sonnet" -p "Fix the code according to the adversarial feedback. Edit files until issues are resolved." --dangerously-skip-permissions --print-timeout 20m0s
+    echo "$FEEDBACK_PAYLOAD" | agy -m "Claude 3.7 Sonnet" -p "Fix the UI according to the adversarial UI feedback. Edit files until Blockers/Criticals are resolved." --dangerously-skip-permissions --print-timeout 20m0s
   elif [ "$LLM_RUNNER" = "cursor-agent" ]; then
-    echo "$FEEDBACK_PAYLOAD" | cursor-agent -p "Fix the code according to the feedback"
+    echo "$FEEDBACK_PAYLOAD" | cursor-agent -p "Fix the UI according to the adversarial UI feedback"
   elif [ "$LLM_RUNNER" = "codex" ]; then
-    echo "$FEEDBACK_PAYLOAD" | codex exec "Fix the code according to the feedback"
+    echo "$FEEDBACK_PAYLOAD" | codex exec "Fix the UI according to the adversarial UI feedback"
   else
-    echo "$FEEDBACK_PAYLOAD" | claude -p "Fix the code according to the feedback"
+    echo "$FEEDBACK_PAYLOAD" | claude -p "Fix the UI according to the adversarial UI feedback"
   fi
 
   echo "[Round $ROUND] Builder agent completed updates. Re-evaluating diff..."
   ROUND=$((ROUND + 1))
 done
 
-echo -e "\n✖ FAILED: Maximum review iterations ($MAX_ROUNDS) reached without unanimous approval."
+echo -e "\n✖ FAILED: Maximum UI review iterations ($MAX_ROUNDS) reached without unanimous approval."
 exit 1

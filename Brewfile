@@ -1,6 +1,8 @@
 # Core command-line tools used by zsh/.zshrc and the dotfiles setup.
 brew "bat"
+brew "bun"
 brew "chafa"
+
 brew "eza"
 brew "exiftool"
 brew "fastfetch"

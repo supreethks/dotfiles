@@ -184,6 +184,15 @@ Use `--format ansi` when colors and terminal styling are evidence. Otherwise use
 
 After that failed read, ask the agent to write its complete response as Markdown in a temporary directory and reply only with the file path, then read the file directly. Use this only as a fallback; do not request file output in the initial prompt.
 
+## Clean up after work completes
+
+When you finish the task that needed extra Herdr layout (sibling panes, review tabs, worktree workspaces, temporary agents), clean up what you created before ending the turn — do not leave orphan panes/tabs/workspaces behind.
+
+- Prefer closing the tab or workspace you created (`herdr tab close <tab_id>`, `herdr workspace close <workspace_id>`) over closing panes one-by-one when that removes the whole temporary layout.
+- Release or exit temporary agents first when needed (`herdr pane release-agent`, or quit the agent in-pane), then close the tab/workspace.
+- Only tear down topology you created for this task. Leave the caller's pane, the user's product tabs, and unrelated workspaces alone.
+- If the user still needs the layout (follow-up work, watching a long job), skip cleanup and say what remains open.
+
 ## Safety and coordination rules
 
 - Use `--no-focus` for background work unless the user asked to switch context.

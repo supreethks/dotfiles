@@ -14,14 +14,13 @@ fi
 BASE_REF="${1:-HEAD~1}"
 REQUESTED_RUNNER="${2:-${LLM_RUNNER:-}}"
 
-# Resolve LLM Agent CLI Runner
 select_runner() {
   local choice=""
   if [ -n "$REQUESTED_RUNNER" ]; then
     choice="$REQUESTED_RUNNER"
   elif [ -t 0 ] || [ -t 1 ]; then
     echo "======================================================"
-    echo " Select LLM Agent CLI Reviewer:"
+    echo " Select LLM Agent CLI Reviewer (adversarial UI):"
     echo "  1) agy (Google Antigravity CLI)"
     echo "  2) agy-claude (Antigravity CLI with Claude model)"
     echo "  3) cursor-agent (Cursor Agent CLI)"
@@ -38,7 +37,6 @@ select_runner() {
       *) choice="agy" ;;
     esac
   else
-    # Non-interactive fallback: detect available CLI
     if command -v agy >/dev/null 2>&1; then
       choice="agy"
     elif command -v codex >/dev/null 2>&1; then
@@ -68,7 +66,6 @@ select_runner() {
 
 select_runner
 
-# Defense against argument injection: separate ref from path with --
 DIFF=$(git diff "$BASE_REF" -- 2>/dev/null || git diff --)
 if [ -z "$DIFF" ]; then
   echo "No diff found against $BASE_REF."
@@ -78,52 +75,81 @@ fi
 CHANGED_FILES=$(git diff --name-only "$BASE_REF" -- 2>/dev/null || git diff --name-only --)
 REVIEWERS=()
 
-if echo "$CHANGED_FILES" | grep -qE "\.rs$|Cargo\.(toml|lock)"; then
-  REVIEWERS+=("reviewer_rust_backend.txt")
+# Optional force: UI_PLATFORMS=desktop,website,android,ios
+if [ -n "${UI_PLATFORMS:-}" ]; then
+  IFS=',' read -r -a FORCED <<< "$UI_PLATFORMS"
+  for p in "${FORCED[@]}"; do
+    case "$(echo "$p" | tr '[:upper:]' '[:lower:]' | xargs)" in
+      desktop) REVIEWERS+=("reviewer_ui_desktop.txt") ;;
+      website|web) REVIEWERS+=("reviewer_ui_website.txt") ;;
+      android) REVIEWERS+=("reviewer_ui_android.txt") ;;
+      ios) REVIEWERS+=("reviewer_ui_ios.txt") ;;
+    esac
+  done
+else
+  if echo "$CHANGED_FILES" | grep -qE 'src-tauri/|tauri\.conf|src/components/|src/App\.(tsx|jsx|vue)|apps/.+/src/'; then
+    REVIEWERS+=("reviewer_ui_desktop.txt")
+  fi
+  if echo "$CHANGED_FILES" | grep -qE 'website/|\.astro$|\.html$'; then
+    REVIEWERS+=("reviewer_ui_website.txt")
+  fi
+  if echo "$CHANGED_FILES" | grep -qE 'android/|\.kt$'; then
+    REVIEWERS+=("reviewer_ui_android.txt")
+  fi
+  if echo "$CHANGED_FILES" | grep -qE 'ios/|\.swift$|\.storyboard$|\.xib$'; then
+    REVIEWERS+=("reviewer_ui_ios.txt")
+  fi
 fi
-if echo "$CHANGED_FILES" | grep -qE "src-tauri|tauri\.conf\.json"; then
-  REVIEWERS+=("reviewer_tauri_frontend.txt" "reviewer_desktop_os.txt")
-fi
-if echo "$CHANGED_FILES" | grep -qE "manifest\.json|extension/"; then
-  REVIEWERS+=("reviewer_extension_crossbrowser.txt")
-fi
-if echo "$CHANGED_FILES" | grep -qE "android/|ios/|\.kt$|\.swift$"; then
-  REVIEWERS+=("reviewer_mobile_native.txt")
-fi
-if echo "$CHANGED_FILES" | grep -qE "workers/|wrangler\.(toml|jsonc)|sync/"; then
-  REVIEWERS+=("reviewer_cloudflare_sync.txt")
+
+# Dedupe
+if [ ${#REVIEWERS[@]} -gt 0 ]; then
+  REVIEWERS=($(printf '%s\n' "${REVIEWERS[@]}" | awk 'NF && !seen[$0]++'))
 fi
 
 if [ ${#REVIEWERS[@]} -eq 0 ]; then
-  REVIEWERS=("reviewer_sec.txt" "reviewer_arch.txt")
+  echo "No UI surfaces in diff; adversarial-ui-review skipped."
+  exit 0
 fi
 
-echo "Running adversarial review via [$LLM_RUNNER] with: ${REVIEWERS[*]}"
+EVIDENCE_NOTE=""
+if [ -n "${UI_EVIDENCE_DIR:-}" ] && [ -d "$UI_EVIDENCE_DIR" ]; then
+  EVIDENCE_NOTE=$'\n\n=== UI EVIDENCE FILES ===\n'
+  EVIDENCE_NOTE+="$(find "$UI_EVIDENCE_DIR" -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.webp' -o -name '*.md' -o -name '*.txt' \) | head -40)"
+  EVIDENCE_NOTE+=$'\n(Open/inspect these paths when judging visual hierarchy, overflow, and states.)\n'
+fi
+
+PAYLOAD="${DIFF}${EVIDENCE_NOTE}"
+
+echo "Running adversarial UI review via [$LLM_RUNNER] with: ${REVIEWERS[*]}"
 
 FEEDBACK=""
 ALL_APPROVED=true
+
+run_reviewer() {
+  local PROMPT_FILE="$1"
+  if [ "$LLM_RUNNER" = "agy" ]; then
+    echo "$PAYLOAD" | agy -p "$(cat "$PROMPT_FILE")" --dangerously-skip-permissions --print-timeout 15m0s 2>&1 || true
+  elif [ "$LLM_RUNNER" = "agy-claude" ]; then
+    echo "$PAYLOAD" | agy -m "Claude 3.7 Sonnet" -p "$(cat "$PROMPT_FILE")" --dangerously-skip-permissions --print-timeout 15m0s 2>&1 || true
+  elif [ "$LLM_RUNNER" = "cursor-agent" ]; then
+    echo "$PAYLOAD" | cursor-agent -p "$(cat "$PROMPT_FILE")" --output-format text 2>&1 || true
+  elif [ "$LLM_RUNNER" = "codex" ]; then
+    echo "$PAYLOAD" | codex exec "$(cat "$PROMPT_FILE")" 2>&1 || true
+  else
+    echo "$PAYLOAD" | claude -p "$(cat "$PROMPT_FILE")" 2>&1 || true
+  fi
+}
 
 for REV in "${REVIEWERS[@]}"; do
   PROMPT_FILE="${PROMPTS_DIR}/$REV"
   if [ -f "$PROMPT_FILE" ]; then
     echo "Evaluating with $REV..."
-    if [ "$LLM_RUNNER" = "agy" ]; then
-      OUT=$(echo "$DIFF" | agy -p "$(cat "$PROMPT_FILE")" --dangerously-skip-permissions --print-timeout 15m0s 2>&1 || true)
-    elif [ "$LLM_RUNNER" = "agy-claude" ]; then
-      OUT=$(echo "$DIFF" | agy -m "Claude 3.7 Sonnet" -p "$(cat "$PROMPT_FILE")" --dangerously-skip-permissions --print-timeout 15m0s 2>&1 || true)
-    elif [ "$LLM_RUNNER" = "cursor-agent" ]; then
-      OUT=$(echo "$DIFF" | cursor-agent -p "$(cat "$PROMPT_FILE")" --output-format text 2>&1 || true)
-    elif [ "$LLM_RUNNER" = "codex" ]; then
-      OUT=$(echo "$DIFF" | codex exec "$(cat "$PROMPT_FILE")" 2>&1 || true)
-    else
-      OUT=$(echo "$DIFF" | claude -p "$(cat "$PROMPT_FILE")" 2>&1 || true)
-    fi
-
+    OUT=$(run_reviewer "$PROMPT_FILE")
     if ! echo "$OUT" | grep -q "VERDICT: APPROVED"; then
       ALL_APPROVED=false
       FEEDBACK+=$"
 
-### Review: $REV
+### UI Review: $REV
 $OUT"
     else
       echo "  ✔ $REV: APPROVED"
@@ -132,10 +158,10 @@ $OUT"
 done
 
 if [ "$ALL_APPROVED" = true ]; then
-  echo "✔ All specialized reviewers approved the diff."
+  echo "✔ All adversarial UI reviewers approved the diff."
   exit 0
 else
-  echo -e "\n--- REVIEW ISSUES FOUND ---"
+  echo -e "\n--- UI REVIEW ISSUES FOUND ---"
   echo "$FEEDBACK"
   if [ -n "${HERDR_SESSION_ID:-}" ]; then
     herdr send --session "$HERDR_SESSION_ID" "$FEEDBACK"

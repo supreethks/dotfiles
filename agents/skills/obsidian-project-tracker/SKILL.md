@@ -81,7 +81,7 @@ Agents must **never hardcode project names**. Instead, dynamically resolve the p
 flowchart TD
     A["Stage 1: Backlog Intake & Task Selection\n('let's work on the backlog')"] --> B["Stage 2: Mandatory 'grill-with-docs' Interview\n(Drill down on specs, UX, edge cases, ADRs)"]
     B --> C["Stage 3: Clean Branch & Implementation\n(Code changes + ADR recording)"]
-    C --> D["Stage 4: Verification, Adversarial Review & Tests\n(CI + Herdr/AGY Adversarial Quality Gate)"]
+    C --> D["Stage 4: Verification + Code / UI / QA gates\n(CI + adversarial-review + adversarial-ui-review + adversarial-qa)"]
     D --> E["Stage 5: Session Wrap-Up & Vault Sync\n(Kanban 'Done', Work_Log, Remote PR)"]
 ```
 
@@ -135,21 +135,40 @@ python3 /Users/supreethks/.agents/skills/obsidian-project-tracker/scripts/backlo
 
 ---
 
-### Stage 4: Verification, Adversarial Review & Test Backfilling
+### Stage 4: Verification, Adversarial Code + UI + QA & Test Backfilling
 1. **Run Project CI locally**: Match the exact CI workflow commands for the repo.
-2. **Interactive / Hardware Verification**: Verify in the running app (webview, desktop window, or mobile device).
+2. **Interactive / Hardware Verification**: Verify in the running app (webview, desktop window, or mobile device). Capture screenshots of changed UI states for the UI gate.
 3. **Backfill Automated Tests**: Convert what was verified by hand into automated tests (Vitest, Playwright, Espresso, XCUITest).
-4. **Mandatory Adversarial Quality Gate & Auto-Loop (herdr-auto-loop)**:
-   - Run the autonomous multi-round adversarial review loop against base (`origin/main` or `forgejo/develop`):
+4. **Mandatory Adversarial Code Quality Gate & Auto-Loop**:
+   - Run the autonomous multi-round adversarial **code** review loop against base (`origin/main` or `forgejo/develop`):
      ```bash
      ~/.agents/skills/adversarial-review/scripts/herdr-auto-loop.sh <base_ref>
      ```
-   - Automatically dispatches specialized stack reviewers in parallel, feeds any identified issues to the builder agent for automatic remediation, and re-evaluates until all reviewers output `VERDICT: APPROVED`.
+   - Dispatches specialized stack reviewers in parallel; remediates until all output `VERDICT: APPROVED`.
+5. **Mandatory Adversarial UI / UX / Design Gate & Auto-Loop** (when UI surfaces changed):
+   - Separate personas for **desktop**, **website**, **Android**, and **iOS** (evidence-cited: Nielsen, WCAG 2.2, HIG, Material, Laws of UX):
+     ```bash
+     export UI_EVIDENCE_DIR=<screenshots-from-step-2>
+     ~/.agents/skills/adversarial-ui-review/scripts/herdr-ui-auto-loop.sh <base_ref>
+     ```
+   - Any Blocker/Critical fails; Tips/Warnings may remain. Skip only if the script reports no UI surfaces in the diff.
+   - See skill `adversarial-ui-review`.
+6. **Mandatory Adversarial End-User QA Gate** (every PR, before merge — **all projects**):
+   - Global skill `adversarial-qa`. Per-repo `.adversarial-qa.json` supplies Tart VM, build command, launch shortcut/URL (no project hardcoding in the skill).
+   - Smoke + PRD acceptance; **always-on video** + screenshots → QA verification package:
+     ```bash
+     # From the product repo root (config auto-loaded)
+     ~/.agents/skills/adversarial-qa/scripts/run-qa-gate.sh <base_ref>
+     ```
+   - Desktop: unsigned debug in warm Tart · Android: emulator · iOS: Simulator · Web: real browser.
+   - Defects block merge · Observations do not · Infra → one retry → else `INCONCLUSIVE`.
+   - Exploratory chaos is **nightly only**.
+   - Attach `qa-packages/…` + REPORT summary to the PR and project Work_Log.
 
 ---
 
 ### Stage 5: Session Wrap-Up & Remote PR / Obsidian Sync
-Upon completing implementation, verification, and adversarial approval:
+Upon completing implementation, verification, and adversarial code + UI + QA approval:
 1. **Push Branch & Open Pull Request (MANDATORY)**:
    - Push the clean feature branch to the remote (`forgejo` or `origin`):
      ```bash
@@ -176,6 +195,8 @@ Upon completing implementation, verification, and adversarial approval:
    - **Files Modified**: `<path/to/file1>`, `<path/to/file2>`
    - **Verification**: <Manual verification notes and test suite results>
    - **Adversarial Review**: ✔ Approved by `<reviewer_persona_1>`, `<reviewer_persona_2>`
+   - **Adversarial UI Review**: ✔ Approved by `<reviewer_ui_desktop|website|android|ios>` (or skipped — no UI surfaces)
+   - **Adversarial QA**: ✔ `APPROVED` — `qa-packages/<ts>-<sha>-<platform>/` (smoke + PRD; video on)
    - **Pull Request**: Opened [PR #X](http://<host:port>/<owner>/<repo>/pulls/X) targeting `develop`.
    - **Next Steps / Blockers**: <Follow-ups or unblocked work>
    ```
