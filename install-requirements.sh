@@ -54,6 +54,33 @@ install_remote_installer "claude" "https://claude.ai/install.sh" "bash"
 install_remote_installer "agy" "https://antigravity.google/cli/install.sh"
 install_remote_installer "cursor-agent" "https://cursor.com/install"
 
+if command -v herdr >/dev/null 2>&1; then
+  echo "==> Installing Herdr plugins"
+  installed_plugins="$(herdr plugin list 2>/dev/null || true)"
+  install_herdr_plugin() {
+    local plugin_id="$1"
+    local plugin_repo="$2"
+    if echo "$installed_plugins" | grep -q "$plugin_id"; then
+      echo "  [SKIP] Herdr plugin $plugin_id is already installed"
+    else
+      echo "  [INSTALL] Herdr plugin $plugin_id from $plugin_repo"
+      herdr plugin install "$plugin_repo" -y || echo "  [WARN] Failed to install Herdr plugin $plugin_repo"
+    fi
+  }
+  install_herdr_plugin "herdr-navigator" "thanhdat77/herdr-navigator"
+  install_herdr_plugin "herdr-ai-tracker" "supreethks/herdr-ai-tracker"
+  install_herdr_plugin "chmarax.herdr-nvim" "ChmaraX/herdr-nvim"
+  install_herdr_plugin "annotate" "plannotator/herdr-annotate"
+
+  echo "==> Installing Herdr agent integrations"
+  for agent in claude codex antigravity-cli cursor grok pi; do
+    herdr integration install "$agent" 2>/dev/null || true
+  done
+fi
+
+
+
+
 install_git_checkout() {
   local repo_url="$1"
   local destination="$2"

@@ -171,6 +171,11 @@ else:
   obsidian open "journal/${target_date}" -v main-vault
 }
 
+# Ghostty quick terminal (Cmd+`) → persisted Herdr "quake" session for quick agent help
+if [[ "$GHOSTTY_QUICK_TERMINAL" == "1" && -z "$HERDR_SESSION" ]] && command -v herdr >/dev/null 2>&1; then
+  exec herdr --session quake
+fi
+
 # ── App Aliases ─────────────────────────────────────────────────────────
 alias zj="zellij"
 alias h="herdr"
