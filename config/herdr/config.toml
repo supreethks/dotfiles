@@ -1,7 +1,15 @@
 [ui]
 agent_panel_sort = "spaces"
 status_indicators = "symbols"
+pane_borders = true
+pane_outer_borders = true
 show_agent_labels_on_pane_borders = true
+
+[theme]
+name = "tokyo-night"
+
+[theme.custom]
+panel_bg = "reset"
 
 [keys]
 prefix = "ctrl+space"
@@ -14,4 +22,64 @@ previous_workspace = "prefix+u"
 next_workspace = "prefix+d"
 
 [ui.sidebar.agents]
-rows = [["state_text", "workspace", "tab"], ["agent"]]
+rows = [["state_text", "workspace", "tab"], [{ token = "$quota_topic", dim = false }], [{ token = "$quota_cache", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_cache_ttl", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_error", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_context", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_week_inline_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_inline_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_inline_danger", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_5h_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_5h_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_5h_danger", fg = "#ca6470", bold = true, dim = false }, { token = "$quota_week_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_danger", fg = "#ca6470", bold = true, dim = false }]]
+row_gap = 0 # herdr-agent-quota
+
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_text", "workspace", "tab"], [{ token = "$quota_topic", dim = false }], [{ token = "$quota_cache", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_cache_ttl", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_error", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_context", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_week_inline_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_inline_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_inline_danger", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_5h_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_5h_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_5h_danger", fg = "#ca6470", bold = true, dim = false }, { token = "$quota_week_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_danger", fg = "#ca6470", bold = true, dim = false }]] # herdr-agent-quota-provider
+codex = [["state_text", "workspace", "tab"], [{ token = "$quota_topic", dim = false }], [{ token = "$quota_cache", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_cache_ttl", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_error", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_context", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_week_inline_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_inline_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_inline_danger", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_5h_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_5h_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_5h_danger", fg = "#ca6470", bold = true, dim = false }, { token = "$quota_week_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_danger", fg = "#ca6470", bold = true, dim = false }]] # herdr-agent-quota-provider
+grok = [["state_text", "workspace", "tab"], [{ token = "$quota_topic", dim = false }], [{ token = "$quota_cache", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_cache_ttl", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_error", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_context", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_week_inline_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_inline_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_inline_danger", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_5h_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_5h_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_5h_danger", fg = "#ca6470", bold = true, dim = false }, { token = "$quota_week_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_danger", fg = "#ca6470", bold = true, dim = false }]] # herdr-agent-quota-provider
+agy = [["state_text", "workspace", "tab"], [{ token = "$quota_topic", dim = false }], [{ token = "$quota_cache", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_cache_ttl", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_error", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_context", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_week_inline_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_inline_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_inline_danger", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_5h_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_5h_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_5h_danger", fg = "#ca6470", bold = true, dim = false }, { token = "$quota_week_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_danger", fg = "#ca6470", bold = true, dim = false }]] # herdr-agent-quota-provider
+opencode = [["state_text", "workspace", "tab"], [{ token = "$quota_topic", dim = false }], [{ token = "$quota_cache", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_cache_ttl", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_error", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_context", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_week_inline_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_inline_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_inline_danger", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_5h_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_5h_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_5h_danger", fg = "#ca6470", bold = true, dim = false }, { token = "$quota_week_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_danger", fg = "#ca6470", bold = true, dim = false }]] # herdr-agent-quota-provider
+pi = [["state_text", "workspace", "tab"], [{ token = "$quota_topic", dim = false }], [{ token = "$quota_cache", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_cache_ttl", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_error", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_context", fg = "#9aa7b8", bold = true, dim = false }, { token = "$quota_week_inline_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_inline_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_inline_danger", fg = "#ca6470", bold = true, dim = false }], [{ token = "$quota_5h_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_5h_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_5h_danger", fg = "#ca6470", bold = true, dim = false }, { token = "$quota_week_normal", fg = "#84b084", bold = true, dim = false }, { token = "$quota_week_warning", fg = "#cdaa65", bold = true, dim = false }, { token = "$quota_week_danger", fg = "#ca6470", bold = true, dim = false }]] # herdr-agent-quota-provider
+
+[[keys.command]]
+key = "prefix+t"
+type = "plugin_action"
+command = "herdr-navigator.open"
+description = "jump to anything"
+
+[[keys.command]]
+key = "prefix+shift+r"
+type = "plugin_action"
+command = "herdr-agent-quota.refresh"
+description = "refresh all agent quotas"
+
+[[keys.command]]
+key = "prefix+e"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.toggle"
+description = "nvim sidebar"
+
+[[keys.command]]
+key = "prefix+o"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.pick-file"
+description = "open file from agent output"
+
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "annotate.capture"
+description = "annotate text"
+
+[[keys.command]]
+key = "prefix+shift+a"
+type = "plugin_action"
+command = "annotate.copy-context"
+description = "copy annotations as context"
+
+[[keys.command]]
+key = "prefix+m"
+type = "plugin_action"
+command = "annotate.manage"
+description = "manage annotations"
+
+[[keys.command]]
+key = "prefix+shift+o"
+type = "plugin_action"
+command = "annotate.last"
+description = "review the agent's last reply"
+
+
+

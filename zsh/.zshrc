@@ -174,3 +174,8 @@ else:
 # ── App Aliases ─────────────────────────────────────────────────────────
 alias zj="zellij"
 alias h="herdr"
+
+
+# clipshot Ghostty integration
+export CLIPSHOT_TEMPLATE="See screenshot : {link} "
+[[ -f "$HOME/development/clipshot/zsh/clipshot.zsh" ]] && source "$HOME/development/clipshot/zsh/clipshot.zsh"
