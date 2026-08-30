@@ -17,32 +17,30 @@ panel_bg = "reset"
 [keys]
 prefix = "ctrl+space"
 
-# Direct Cmd bindings (Ghostty passes these through to Herdr).
-focus_pane_left = "cmd+h"
-focus_pane_down = "cmd+j"
-focus_pane_up = "cmd+k"
-focus_pane_right = "cmd+l"
+# Bound on prefix+...; Ghostty forwards Cmd chords as Ctrl+Space sequences.
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
 
-split_vertical = "cmd+d"
-split_horizontal = "cmd+shift+d"
+split_vertical = "prefix+v"
+split_horizontal = "prefix+minus"
 
-resize_pane_left = "cmd+alt+h"
-resize_pane_down = "cmd+alt+j"
-resize_pane_up = "cmd+alt+k"
-resize_pane_right = "cmd+alt+l"
+resize_pane_left = "prefix+ctrl+h"
+resize_pane_down = "prefix+ctrl+j"
+resize_pane_up = "prefix+ctrl+k"
+resize_pane_right = "prefix+ctrl+l"
 
-zoom = "cmd+shift+enter"
+zoom = "prefix+z"
 
-new_tab = "cmd+t"
-close_pane = "cmd+w"
-previous_tab = "cmd+["
-next_tab = "cmd+]"
-switch_tab = ["prefix+1..9", "cmd+1..9"]
+new_tab = "prefix+c"
+close_pane = "prefix+x"
+previous_tab = "prefix+p"
+next_tab = "prefix+n"
+switch_tab = "prefix+1..9"
 
-previous_workspace = "cmd+alt+u"
-next_workspace = "cmd+alt+d"
-
-reload_config = "cmd+shift+r"
+previous_workspace = "prefix+u"
+next_workspace = "prefix+d"
 
 
 [[keys.command]]

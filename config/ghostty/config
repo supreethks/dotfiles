@@ -59,12 +59,50 @@ quick-terminal-screen = main
 quick-terminal-animation-duration = 0.15
 
 # ── Keybindings ──────────────────────────────────────────────────────────
-# Pane/tab/split navigation is handled by Herdr (see config/herdr/config.toml).
-# macOS: disable Ghostty "Hide" on Cmd+H in System Settings → Keyboard →
-# App Shortcuts so Herdr can use Cmd+H for pane-left focus.
+# Herdr uses Ctrl+Space as prefix. Ghostty cannot pass raw Cmd chords through
+# to a TUI, so Cmd shortcuts are forwarded as text:\x00<key> sequences.
+# macOS: run ~/dotfiles/scripts/macos-disable-ghostty-hide.sh so Cmd+H works.
 
 # Cmd+E → AIChat shell helper (Aerospace owns Option+E as workspace E).
 keybind = cmd+e=esc:e
+
+# Herdr pane focus (Cmd+HJKL)
+keybind = super+h=text:\x00h
+keybind = super+j=text:\x00j
+keybind = super+k=text:\x00k
+keybind = super+l=text:\x00l
+
+# Herdr splits (Cmd+D / Cmd+Shift+D)
+keybind = super+d=text:\x00v
+keybind = super+shift+d=text:\x00-
+
+# Herdr resize (Cmd+Option+HJKL → prefix+Ctrl+HJKL)
+keybind = super+alt+h=text:\x00\x08
+keybind = super+alt+j=text:\x00\x0a
+keybind = super+alt+k=text:\x00\x0b
+keybind = super+alt+l=text:\x00\x0c
+
+# Herdr zoom, tabs, close
+keybind = super+shift+enter=text:\x00z
+keybind = super+t=text:\x00c
+keybind = super+w=text:\x00x
+keybind = super+bracket_left=text:\x00p
+keybind = super+bracket_right=text:\x00n
+
+# Herdr tab switch (Cmd+1..9)
+keybind = super+digit_1=text:\x001
+keybind = super+digit_2=text:\x002
+keybind = super+digit_3=text:\x003
+keybind = super+digit_4=text:\x004
+keybind = super+digit_5=text:\x005
+keybind = super+digit_6=text:\x006
+keybind = super+digit_7=text:\x007
+keybind = super+digit_8=text:\x008
+keybind = super+digit_9=text:\x009
+
+# Herdr workspace nav (Cmd+Option+U/D)
+keybind = super+alt+u=text:\x00u
+keybind = super+alt+d=text:\x00d
 
 # Ghostty host actions (scroll, prompt jump, reload)
 keybind = cmd+shift+r=reload_config
