@@ -19,10 +19,11 @@ window-padding-y = 10
 window-padding-balance = true
 window-padding-color = extend
 
-# Translucent background with blur (macOS)
-background-opacity = 0.90
-background-blur-radius = 30
-unfocused-split-opacity = 0.85
+# Opaque pitch-black background (no translucency)
+background = #000000
+background-opacity = 1
+background-blur = false
+unfocused-split-opacity = 1
 
 # macOS native feel
 macos-titlebar-style = tabs
@@ -64,11 +65,15 @@ quick-terminal-animation-duration = 0.15
 # Cmd+E → AIChat shell helper (Aerospace owns Option+E as workspace E).
 keybind = cmd+e=esc:e
 
-# Herdr pane focus (Cmd+HJKL)
-keybind = super+h=text:\x00h
+# Herdr tab/workspace nav (Cmd+Arrow keys)
+keybind = super+arrow_left=text:\x00h
+keybind = super+arrow_right=text:\x00l
+keybind = super+arrow_up=text:\x00u
+keybind = super+arrow_down=text:\x00d
+
+# Herdr pane focus (Cmd+J/K — vertical only; H/L reserved for tab arrows)
 keybind = super+j=text:\x00j
 keybind = super+k=text:\x00k
-keybind = super+l=text:\x00l
 
 # Herdr splits (Cmd+D / Cmd+Shift+D)
 keybind = super+d=text:\x00v
@@ -84,8 +89,6 @@ keybind = super+alt+l=text:\x00\x0c
 keybind = super+shift+enter=text:\x00z
 keybind = super+t=text:\x00c
 keybind = super+w=text:\x00x
-keybind = super+bracket_left=text:\x00p
-keybind = super+bracket_right=text:\x00n
 
 # Herdr tab switch (Cmd+1..9)
 keybind = super+digit_1=text:\x001
@@ -97,10 +100,6 @@ keybind = super+digit_6=text:\x006
 keybind = super+digit_7=text:\x007
 keybind = super+digit_8=text:\x008
 keybind = super+digit_9=text:\x009
-
-# Herdr workspace nav (Cmd+Option+U/D)
-keybind = super+alt+u=text:\x00u
-keybind = super+alt+d=text:\x00d
 
 # Ghostty host actions (scroll, prompt jump, reload)
 keybind = cmd+shift+r=reload_config
