@@ -1,34 +1,32 @@
 # ╔══════════════════════════════════════════════════════════════════════╗
 # ║  Ghostty – Daily Driver Config                                      ║
-# ║  Theme: Catppuccin Mocha  ·  Font: JetBrainsMono NF               ║
+# ║  Theme: Kanagawa Wave (matches tmux)  ·  Font: JetBrainsMono NF    ║
 # ╚══════════════════════════════════════════════════════════════════════╝
 
 # ── Theme ────────────────────────────────────────────────────────────────
-theme = "Catppuccin Mocha"
+# Pastel Dark theme (matches iTerm2)
+theme = "iTerm2 Pastel Dark Background"
 
 # ── Font ─────────────────────────────────────────────────────────────────
 font-family = "JetBrainsMono Nerd Font"
 font-size = 14.0
-font-feature = +calt,+liga
 font-thicken = true
 adjust-cell-height = 15%
 
 # ── Window & Appearance ─────────────────────────────────────────────────
-window-decoration = false
-window-padding-x = 12
+window-padding-x = 14
 window-padding-y = 10
 window-padding-balance = true
 window-padding-color = extend
-window-step-resize = true
 
 # Translucent background with blur (macOS)
 background-opacity = 0.90
 background-blur-radius = 30
-unfocused-split-opacity = 0.70
+unfocused-split-opacity = 0.85
 
 # macOS native feel
-macos-titlebar-style = hidden
-macos-option-as-alt = left
+macos-titlebar-style = tabs
+macos-option-as-alt = true
 window-save-state = never
 window-theme = auto
 confirm-close-surface = false
