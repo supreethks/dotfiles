@@ -1,32 +1,34 @@
 # ╔══════════════════════════════════════════════════════════════════════╗
 # ║  Ghostty – Daily Driver Config                                      ║
-# ║  Theme: Kanagawa Wave (matches tmux)  ·  Font: JetBrainsMono NF    ║
+# ║  Theme: Catppuccin Mocha  ·  Font: JetBrainsMono NF               ║
 # ╚══════════════════════════════════════════════════════════════════════╝
 
 # ── Theme ────────────────────────────────────────────────────────────────
-# Pastel Dark theme (matches iTerm2)
-theme = "iTerm2 Pastel Dark Background"
+theme = "Catppuccin Mocha"
 
 # ── Font ─────────────────────────────────────────────────────────────────
 font-family = "JetBrainsMono Nerd Font"
 font-size = 14.0
+font-feature = +calt,+liga
 font-thicken = true
 adjust-cell-height = 15%
 
 # ── Window & Appearance ─────────────────────────────────────────────────
-window-padding-x = 14
+window-decoration = false
+window-padding-x = 12
 window-padding-y = 10
 window-padding-balance = true
 window-padding-color = extend
+window-step-resize = true
 
 # Translucent background with blur (macOS)
 background-opacity = 0.90
 background-blur-radius = 30
-unfocused-split-opacity = 0.85
+unfocused-split-opacity = 0.70
 
 # macOS native feel
-macos-titlebar-style = tabs
-macos-option-as-alt = true
+macos-titlebar-style = hidden
+macos-option-as-alt = left
 window-save-state = never
 window-theme = auto
 confirm-close-surface = false
@@ -49,7 +51,6 @@ clipboard-paste-protection = false
 
 # ── Quick Terminal (quake-style drop-down → Herdr quake session) ───────
 # zsh/.zshrc auto-starts herdr --session quake when GHOSTTY_QUICK_TERMINAL=1.
-# Empty command clears any previously saved custom quick-terminal command.
 command =
 keybind = global:cmd+backquote=toggle_quick_terminal
 quick-terminal-position = top
@@ -58,62 +59,25 @@ quick-terminal-screen = main
 quick-terminal-animation-duration = 0.15
 
 # ── Keybindings ──────────────────────────────────────────────────────────
+# Pane/tab/split navigation is handled by Herdr (see config/herdr/config.toml).
+# macOS: disable Ghostty "Hide" on Cmd+H in System Settings → Keyboard →
+# App Shortcuts so Herdr can use Cmd+H for pane-left focus.
+
 # Cmd+E → AIChat shell helper (Aerospace owns Option+E as workspace E).
-# Ghostty sends Esc+e; zsh binds that to the aichat widget.
 keybind = cmd+e=esc:e
 
-# Forward Command arrows to Herdr's Ctrl+Space prefix (Ghostty otherwise
-# consumes these for prompt navigation or sends readline control bytes).
-keybind = super+arrow_left=text:\x00h
-keybind = super+arrow_right=text:\x00l
-keybind = super+arrow_up=text:\x00u
-keybind = super+arrow_down=text:\x00d
-
-# Forward Command+1..9 to Herdr tab switching (Ctrl+Space + 1..9)
-keybind = super+digit_1=text:\x001
-keybind = super+digit_2=text:\x002
-keybind = super+digit_3=text:\x003
-keybind = super+digit_4=text:\x004
-keybind = super+digit_5=text:\x005
-keybind = super+digit_6=text:\x006
-keybind = super+digit_7=text:\x007
-keybind = super+digit_8=text:\x008
-keybind = super+digit_9=text:\x009
-
-# Splits (Cmd+D / Cmd+Shift+D like iTerm)
-keybind = cmd+d=new_split:right
-keybind = cmd+shift+d=new_split:down
-
-# Navigate splits with Cmd+Option+Arrows
-keybind = cmd+alt+left=goto_split:left
-keybind = cmd+alt+right=goto_split:right
-keybind = cmd+alt+up=goto_split:top
-keybind = cmd+alt+down=goto_split:bottom
-
-# Resize splits
-keybind = cmd+ctrl+left=resize_split:left,20
-keybind = cmd+ctrl+right=resize_split:right,20
-keybind = cmd+ctrl+up=resize_split:up,20
-keybind = cmd+ctrl+down=resize_split:down,20
-
-# Equalize splits
-keybind = cmd+shift+equal=equalize_splits
-
-# Tabs
-keybind = cmd+t=new_tab
-keybind = cmd+w=close_surface
+# Ghostty host actions (scroll, prompt jump, reload)
+keybind = cmd+shift+r=reload_config
+keybind = cmd+u=scroll_page_up
+keybind = cmd+shift+u=scroll_page_down
+keybind = cmd+g=jump_to_prompt:-1
+keybind = cmd+shift+g=jump_to_prompt:1
 
 # Font size
 keybind = cmd+equal=increase_font_size:1
 keybind = cmd+minus=decrease_font_size:1
 keybind = cmd+zero=reset_font_size
 
-# ── Start zellij automatically (Disabled) ─────────────────────────────────
-# command = /bin/zsh -lc ~/.config/ghostty/zellij_ghostty.sh
-
-
-
 # Native macOS copy/paste
 keybind = super+c=copy_to_clipboard
 keybind = super+v=paste_from_clipboard
-

@@ -4,22 +4,45 @@ status_indicators = "symbols"
 pane_borders = true
 pane_outer_borders = true
 show_agent_labels_on_pane_borders = true
+copy_on_select = true
+confirm_close = false
+sidebar_start_collapsed = true
 
 [theme]
-name = "terminal"
+name = "catppuccin"
 
 [theme.custom]
 panel_bg = "reset"
 
 [keys]
 prefix = "ctrl+space"
-switch_tab = "prefix+1..9"
-focus_pane_left = ""
-focus_pane_right = ""
-previous_tab = "prefix+h"
-next_tab = "prefix+l"
-previous_workspace = "prefix+u"
-next_workspace = "prefix+d"
+
+# Direct Cmd bindings (Ghostty passes these through to Herdr).
+focus_pane_left = "cmd+h"
+focus_pane_down = "cmd+j"
+focus_pane_up = "cmd+k"
+focus_pane_right = "cmd+l"
+
+split_vertical = "cmd+d"
+split_horizontal = "cmd+shift+d"
+
+resize_pane_left = "cmd+alt+h"
+resize_pane_down = "cmd+alt+j"
+resize_pane_up = "cmd+alt+k"
+resize_pane_right = "cmd+alt+l"
+
+zoom = "cmd+shift+enter"
+
+new_tab = "cmd+t"
+close_pane = "cmd+w"
+previous_tab = "cmd+["
+next_tab = "cmd+]"
+switch_tab = ["prefix+1..9", "cmd+1..9"]
+
+previous_workspace = "cmd+alt+u"
+next_workspace = "cmd+alt+d"
+
+reload_config = "cmd+shift+r"
 
 
 [[keys.command]]
