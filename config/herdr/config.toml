@@ -15,10 +15,10 @@ panel_bg = "reset"
 prefix = "ctrl+space"
 
 # Bound on prefix+...; Ghostty forwards Cmd chords as Ctrl+Space sequences.
-focus_pane_left = "prefix+left"
-focus_pane_right = "prefix+right"
-focus_pane_up = "prefix+up"
-focus_pane_down = "prefix+down"
+focus_pane_left = "prefix+shift+h"
+focus_pane_down = "prefix+shift+j"
+focus_pane_up = "prefix+shift+k"
+focus_pane_right = "prefix+shift+l"
 
 split_vertical = "prefix+v"
 split_horizontal = "prefix+minus"

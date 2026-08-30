@@ -71,11 +71,11 @@ keybind = super+arrow_right=text:\x00l
 keybind = super+arrow_up=text:\x00u
 keybind = super+arrow_down=text:\x00d
 
-# Herdr pane focus (Cmd+Shift+Arrow keys)
-keybind = super+shift+arrow_left=text:\x00\x1b[D
-keybind = super+shift+arrow_right=text:\x00\x1b[C
-keybind = super+shift+arrow_up=text:\x00\x1b[A
-keybind = super+shift+arrow_down=text:\x00\x1b[B
+# Herdr pane focus (Cmd+Shift+Arrow → prefix+Shift+HJKL)
+keybind = super+shift+arrow_left=text:\x00H
+keybind = super+shift+arrow_right=text:\x00L
+keybind = super+shift+arrow_up=text:\x00K
+keybind = super+shift+arrow_down=text:\x00J
 
 # Herdr splits (Cmd+D / Cmd+Shift+D)
 keybind = super+d=text:\x00v
