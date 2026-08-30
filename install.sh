@@ -41,6 +41,13 @@ link_file "$DOTFILES_DIR/config/ghostty" "$HOME/.config/ghostty"
 link_file "$DOTFILES_DIR/config/zellij" "$HOME/.config/zellij"
 link_file "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
 link_file "$DOTFILES_DIR/config/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+if [ -L "$HOME/.config/aichat" ]; then
+  rm "$HOME/.config/aichat"
+fi
+mkdir -p "$HOME/.config/aichat" "$HOME/.config/atuin"
+link_file "$DOTFILES_DIR/config/aichat/config.yaml" "$HOME/.config/aichat/config.yaml"
+link_file "$DOTFILES_DIR/config/aichat/agy-openai-proxy.py" "$HOME/.config/aichat/agy-openai-proxy.py"
+link_file "$DOTFILES_DIR/config/atuin/config.toml" "$HOME/.config/atuin/config.toml"
 
 # 3. Agent Skills & Search Config
 link_file "$DOTFILES_DIR/agents/skills" "$HOME/.agents/skills"

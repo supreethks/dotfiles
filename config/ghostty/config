@@ -58,6 +58,10 @@ quick-terminal-screen = main
 quick-terminal-animation-duration = 0.15
 
 # ── Keybindings ──────────────────────────────────────────────────────────
+# Cmd+E → AIChat shell helper (Aerospace owns Option+E as workspace E).
+# Ghostty sends Esc+e; zsh binds that to the aichat widget.
+keybind = cmd+e=esc:e
+
 # Forward Command arrows to Herdr's Ctrl+Space prefix (Ghostty otherwise
 # consumes these for prompt navigation or sends readline control bytes).
 keybind = super+arrow_left=text:\x00h

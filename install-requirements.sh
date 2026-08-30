@@ -111,6 +111,20 @@ install_git_checkout \
   "https://github.com/zsh-users/zsh-syntax-highlighting.git" \
   "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
 
+install_git_checkout \
+  "https://github.com/Aloxaf/fzf-tab.git" \
+  "$HOME/.oh-my-zsh/custom/plugins/fzf-tab"
+
+if command -v atuin >/dev/null 2>&1; then
+  atuin_marker="$HOME/.local/share/atuin/.dotfiles_imported"
+  if [[ ! -f "$atuin_marker" ]]; then
+    echo "==> Importing existing shell history into Atuin"
+    mkdir -p "$(dirname "$atuin_marker")"
+    atuin import auto || true
+    touch "$atuin_marker"
+  fi
+fi
+
 if [[ ! -f "$HOME/.zshrc.local" ]]; then
   cp "$DOTFILES_DIR/zsh/.zshrc.local.example" "$HOME/.zshrc.local"
   chmod 600 "$HOME/.zshrc.local"

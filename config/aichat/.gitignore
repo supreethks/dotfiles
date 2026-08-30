@@ -1,0 +1,10 @@
+sessions/
+rags/
+macros/
+functions/
+roles/
+messages.md
+.env
+*.log
+__pycache__/
+*.pyc

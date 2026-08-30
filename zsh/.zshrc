@@ -9,16 +9,32 @@ export ZSH="$HOME/.oh-my-zsh"
 # Disable automatic update prompting (let it update in background)
 zstyle ':omz:update' mode auto
 
-# Oh My Zsh plugins
+# Oh My Zsh plugins (fzf-tab before widget wrappers)
 plugins=(
   git
+  fzf-tab
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
 
-# Load zsh-autosuggestions & zsh-syntax-highlighting if custom paths exist
+# History: large shared file as a fallback even when Atuin is the search UI
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000
+SAVEHIST=100000
+HISTORY_IGNORE='(ls|ls *|cd|cd *|pwd|exit|clear|history|history *)'
+setopt HIST_REDUCE_BLANKS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt EXTENDED_HISTORY
+setopt SHARE_HISTORY
+
+autoload -Uz compinit && compinit
+
+# fzf-tab after compinit, then widget wrappers
+[[ -f ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab/fzf-tab.plugin.zsh ]] && source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab/fzf-tab.plugin.zsh
 [[ -f ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 [[ -f ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -26,11 +42,11 @@ source $ZSH/oh-my-zsh.sh
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="/Users/supreethks/.antigravity/antigravity/bin:$PATH"
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 export PATH="$HOME/.maestro/bin:$PATH"
 
 # Android SDK
-export ANDROID_SDK_ROOT="/Users/supreethks/Library/Android/sdk"
+export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
 export JAVA_HOME="$(brew --prefix openjdk@17)/libexec/openjdk.jdk/Contents/Home"
 export PATH="$JAVA_HOME/bin:$PATH"
 
@@ -81,6 +97,14 @@ if (( $+commands[fzf] )); then
   alias fo="open \$(fzf)"
   alias fc="cursor \$(fzf)"
   alias fv="nvim \$(fzf)"
+
+  # File/dir widgets. History search is rebound by Atuin when it is installed.
+  source <(fzf --zsh)
+fi
+
+# Atuin (SQLite history + fuzzy Ctrl+R). Load after fzf so it owns Ctrl+R.
+if (( $+commands[atuin] )); then
+  eval "$(atuin init zsh --disable-ai)"
 fi
 
 # zoxide (smarter directory jumping)
@@ -105,8 +129,65 @@ fi
 # ── Prompts & Shell Utils ───────────────────────────────────────────────
 eval "$(starship init zsh)"
 
-# Enable command auto-completion
-autoload -Uz compinit && compinit
+# AIChat shell helper (Cmd+E in Ghostty → Alt+E sequence). Uses local `agy`.
+# macOS default is ~/Library/Application Support/aichat; pin the XDG path from dotfiles.
+export AICHAT_CONFIG_DIR="$HOME/.config/aichat"
+AICHAT_AGY_PROXY_PORT=18741
+AICHAT_AGY_PROXY="$HOME/.config/aichat/agy-openai-proxy.py"
+
+_aichat_ensure_agy_proxy() {
+  if ! command -v agy >/dev/null 2>&1; then
+    echo "agy not found; install Antigravity CLI and sign in" >&2
+    return 1
+  fi
+  if [[ ! -f "$AICHAT_AGY_PROXY" ]]; then
+    echo "missing $AICHAT_AGY_PROXY" >&2
+    return 1
+  fi
+  if nc -z 127.0.0.1 "$AICHAT_AGY_PROXY_PORT" >/dev/null 2>&1; then
+    return 0
+  fi
+  nohup python3 "$AICHAT_AGY_PROXY" >/dev/null 2>&1 &
+  disown
+  local i
+  for i in {1..40}; do
+    nc -z 127.0.0.1 "$AICHAT_AGY_PROXY_PORT" >/dev/null 2>&1 && return 0
+    sleep 0.05
+  done
+  echo "failed to start aichat agy proxy on port $AICHAT_AGY_PROXY_PORT" >&2
+  return 1
+}
+
+??() {
+  _aichat_ensure_agy_proxy || return 1
+  if (( $# == 0 )); then
+    aichat
+  else
+    aichat -e "$*"
+  fi
+}
+
+_aichat_zsh() {
+  if [[ -z "$BUFFER" ]]; then
+    return
+  fi
+  if ! _aichat_ensure_agy_proxy; then
+    return 1
+  fi
+  local _old=$BUFFER
+  local _err
+  BUFFER+="⌛"
+  zle -I && zle redisplay
+  BUFFER=$(aichat -e "$_old" 2>/tmp/aichat-agy.err)
+  if [[ $? -ne 0 || -z "$BUFFER" ]]; then
+    _err=$(tail -n 3 /tmp/aichat-agy.err 2>/dev/null)
+    BUFFER="$_old"
+    zle -M "${_err:-aichat/agy failed}"
+  fi
+  zle end-of-line
+}
+zle -N _aichat_zsh
+bindkey '\ee' _aichat_zsh
 
 # Load local / machine-specific secrets and overrides if present
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
