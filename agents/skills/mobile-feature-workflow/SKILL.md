@@ -128,10 +128,17 @@ Then, per platform that changed:
 - **Physical device attached** — verify there. It is the only way to catch real-hardware behaviour: locale-formatted input, store/billing, notification delivery, actual deep links into other apps.
 - **No physical device** — boot an emulator or simulator and verify there instead. Missing hardware is never a reason to skip verification; a simulated run still catches unreachable flows, broken navigation, wrong empty states and layout regressions, which is most of what goes wrong.
 
+**ViMark only:** AVD `Vimark_Pixel_8`, port `5574`, `ANDROID_SERIAL=emulator-5574`. Do not use `Pixel_8` or `Small_Phone`. Boot: `~/.agents/skills/vimark-feature-workflow/scripts/boot-android-emulator.sh`.
+
 ```bash
+# ViMark
+export ANDROID_SERIAL=emulator-5574
+~/.agents/skills/vimark-feature-workflow/scripts/boot-android-emulator.sh
+# Other projects: pick a non-Vimark AVD and a free even port (never 5574)
 ~/Library/Android/sdk/emulator/emulator -list-avds
-~/Library/Android/sdk/emulator/emulator -avd <name> -no-snapshot-load -no-boot-anim   # background
-adb wait-for-device && adb shell 'while [ "$(getprop sys.boot_completed)" != "1" ]; do sleep 2; done'
+~/Library/Android/sdk/emulator/emulator -avd <name> -no-snapshot-load -no-boot-anim
+adb -s "$ANDROID_SERIAL" wait-for-device
+adb -s "$ANDROID_SERIAL" shell 'while [ "$(getprop sys.boot_completed)" != "1" ]; do sleep 2; done'
 
 xcrun simctl list devices available | grep iPhone
 xcrun simctl boot <udid> && xcrun simctl bootstatus <udid> -b
@@ -139,7 +146,7 @@ xcrun simctl boot <udid> && xcrun simctl bootstatus <udid> -b
 
 Install a **debug** build, drive the app with the device MCP (`mobile_list_elements_on_screen` for coordinates and identifiers, `mobile_click_on_screen_at_coordinates`, `mobile_type_keys`), and screenshot each meaningful state.
 
-Be explicit in the write-up about *where* each thing was verified — "verified on a Pixel 8 emulator" and "verified on a physical Pixel 6a" carry different weight, and the reader should not have to guess which one you mean. Where a behaviour genuinely cannot be exercised in a simulator (in-app purchase, push delivery, a third-party app that is not installed), say that it remains unverified rather than implying full coverage.
+Be explicit in the write-up about *where* each thing was verified — "verified on Vimark_Pixel_8 (emulator-5574)" vs "verified on a physical Pixel 6a" carry different weight, and the reader should not have to guess which one you mean. Where a behaviour genuinely cannot be exercised in a simulator (in-app purchase, push delivery, a third-party app that is not installed), say that it remains unverified rather than implying full coverage.
 
 Three rules that protect the user's own device:
 

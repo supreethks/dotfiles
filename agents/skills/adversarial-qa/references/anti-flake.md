@@ -33,6 +33,6 @@ E2E against real GUIs will flake. Goal: **diagnose**, not pretend certainty.
 ## Ready signals (examples)
 
 - Desktop: palette window listed in Peekaboo / AX; or log line `listening`; or IPC ping
-- Android: `adb wait-for-device` + `sys.boot_completed` + package resumed
+- Android: `adb -s "$QA_ANDROID_SERIAL" wait-for-device` + `sys.boot_completed` + package resumed (ViMark serial is `emulator-5574`)
 - iOS: sim booted + app `RunningForeground`
 - Web: Playwright `networkidle` or specific test id visible

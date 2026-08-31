@@ -72,7 +72,10 @@ for p in "${PLATFORMS[@]}"; do
   case "$p" in
     desktop) echo "  Persona: $SCRIPT_DIR/../prompts/qa_desktop_tart.txt" ;;
     website) echo "  Persona: $SCRIPT_DIR/../prompts/qa_website_browser.txt" ;;
-    android) echo "  Persona: $SCRIPT_DIR/../prompts/qa_android_emulator.txt" ;;
+    android)
+      echo "  Persona: $SCRIPT_DIR/../prompts/qa_android_emulator.txt"
+      echo "  AVD: ${QA_ANDROID_AVD:-<unset>}  serial: ${QA_ANDROID_SERIAL:-<unset>}  port: ${QA_ANDROID_PORT:-<unset>}"
+      ;;
     ios) echo "  Persona: $SCRIPT_DIR/../prompts/qa_ios_simulator.txt" ;;
   esac
 done
@@ -84,6 +87,7 @@ Agent runbook (mandatory before merge — any project):
   1. eval "\$(~/.agents/skills/adversarial-qa/scripts/resolve-qa-config.sh)"
   2. Build via \$QA_DEBUG_BUILD_COMMAND (unsigned debug OK).
   3. Desktop: reuse warm Tart \$QA_TART_VM (start only if stopped).
+     Android: boot \$QA_ANDROID_AVD on \$QA_ANDROID_SERIAL (ViMark: Vimark_Pixel_8 / emulator-5574).
   4. Video ALWAYS on before first interaction; screenshot every step.
   5. Smoke + PRD acceptance only (references/journey-templates.md).
   6. Primary launch: \$QA_PRIMARY_LAUNCH_KIND = \$QA_PRIMARY_LAUNCH_VALUE

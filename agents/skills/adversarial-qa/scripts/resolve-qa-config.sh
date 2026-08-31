@@ -38,8 +38,12 @@ if path and os.path.isfile(path):
     print(f"QA_CONFIG_PATH={shlex.quote(path)}")
 
 pl = data.get("primary_launch") or {}
-an = data.get("android") or {}
+an = dict(data.get("android") or {})
 ios = data.get("ios") or {}
+if str(data.get("project") or "").strip().lower() == "vimark":
+    an["avd"] = an.get("avd") or "Vimark_Pixel_8"
+    an["console_port"] = an.get("console_port") or "5574"
+    an["serial"] = an.get("serial") or "emulator-5574"
 
 emit("QA_PROJECT", str(data.get("project") or ""))
 emit("QA_TART_VM", str(data.get("tart_vm") or ""))
@@ -51,6 +55,9 @@ emit("QA_WEBSITE_URL", str(data.get("website_url") or ""))
 emit("QA_ANDROID_PACKAGE", str(an.get("package_id") or ""))
 emit("QA_ANDROID_ACTIVITY", str(an.get("main_activity") or ""))
 emit("QA_ANDROID_APK_GLOB", str(an.get("apk_path_glob") or ""))
+emit("QA_ANDROID_AVD", str(an.get("avd") or ""))
+emit("QA_ANDROID_PORT", str(an.get("console_port") or ""))
+emit("QA_ANDROID_SERIAL", str(an.get("serial") or ""))
 emit("QA_IOS_SCHEME", str(ios.get("scheme") or ""))
 emit("QA_IOS_BUNDLE", str(ios.get("bundle_id") or ""))
 emit("QA_IOS_SIMULATOR", str(ios.get("simulator_name") or ""))

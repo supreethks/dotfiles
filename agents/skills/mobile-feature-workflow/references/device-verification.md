@@ -23,12 +23,17 @@ Prefer an **emulator or simulator** for anything exploratory or destructive. Res
 
 When no physical device is attached, boot a virtual one and verify there — never skip the step. A simulated run still catches unreachable flows, broken navigation, wrong empty states and layout regressions.
 
+**ViMark only:** AVD `Vimark_Pixel_8` on port `5574` (`ANDROID_SERIAL=emulator-5574`). Never steal `Pixel_8` / `Small_Phone`. Boot: `~/.agents/skills/vimark-feature-workflow/scripts/boot-android-emulator.sh`.
+
 ```bash
-# Android
+# ViMark
+export ANDROID_SERIAL=emulator-5574
+~/.agents/skills/vimark-feature-workflow/scripts/boot-android-emulator.sh
+# Other projects — never use port 5574 or AVD Vimark_Pixel_8
 ~/Library/Android/sdk/emulator/emulator -list-avds
-~/Library/Android/sdk/emulator/emulator -avd <name> -no-snapshot-load -no-boot-anim   # run in background
-adb wait-for-device
-adb shell 'while [ "$(getprop sys.boot_completed)" != "1" ]; do sleep 2; done'
+~/Library/Android/sdk/emulator/emulator -avd <name> -no-snapshot-load -no-boot-anim
+adb -s "$ANDROID_SERIAL" wait-for-device
+adb -s "$ANDROID_SERIAL" shell 'while [ "$(getprop sys.boot_completed)" != "1" ]; do sleep 2; done'
 
 # iOS
 xcrun simctl list devices available | grep iPhone

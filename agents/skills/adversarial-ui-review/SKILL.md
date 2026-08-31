@@ -60,7 +60,7 @@ Same runner menu as code review — **ask before running**:
 |---|---|---|
 | `reviewer_ui_desktop.txt` | Tauri / Electron / `src-tauri` / desktop React window UI | Spotlight windows, focus/blur, keyboard first, density, native chrome |
 | `reviewer_ui_website.txt` | `website/`, Astro/HTML marketing or docs sites | Responsive, SEO landmarks, CTA hierarchy, scroll, Core Web Vitals UX |
-| `reviewer_ui_android.txt` | `android/`, `.kt` Compose UI | Material 3, 48dp targets, back stack, system bars, TalkBack |
+| `reviewer_ui_android.txt` | `android/`, `.kt`, XML Fragment layouts | XML + ViewBinding + Material 3, 48dp, TalkBack, Share/pair/search states (not Compose) |
 | `reviewer_ui_ios.txt` | `ios/`, `.swift` SwiftUI/UIKit | HIG, 44pt targets, Dynamic Type, safe areas, VoiceOver |
 
 Shared rubric: `references/severity-rubric.md`  
@@ -73,7 +73,7 @@ Shared authorities & thresholds: `references/evidence-authorities.md`
 ```text
 src-tauri/ | tauri.conf | desktop window React (src/components, src/App)  → desktop
 website/ | *.astro | marketing HTML                                       → website
-android/ | *.kt Compose screens                                           → android
+android/ | *.kt | *.xml Fragment/layout resources                            → android
 ios/ | *.swift | *.storyboard | *.xib                                     → ios
 ```
 
@@ -134,7 +134,7 @@ Invoked as **Stage 4c** after code adversarial review and after manual/desktop/d
 | Workflow | Call |
 |---|---|
 | `vimark-feature-workflow` | `herdr-ui-auto-loop.sh forgejo/develop` when React/window/website UI changed |
-| `mobile-feature-workflow` | `herdr-ui-auto-loop.sh forgejo/develop` when Compose/SwiftUI screens changed |
+| `mobile-feature-workflow` | `herdr-ui-auto-loop.sh forgejo/develop` when XML/Fragment or SwiftUI screens changed |
 | `obsidian-project-tracker` Stage 4 | Run code gate **and** UI gate before QA / PR |
 
 **Next gate**: `adversarial-qa` (end-user binary/site proof package) is mandatory before merge after this design gate.

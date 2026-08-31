@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""OpenAI-compatible shim so AIChat can use a logged-in `agy` CLI."""
+"""OpenAI-compatible shim so AIChat can use a logged-in `cursor-agent` CLI."""
 
 from __future__ import annotations
 
@@ -14,21 +14,18 @@ from typing import Any
 
 HOST: str = "127.0.0.1"
 PORT: int = 18741
-AGY_TIMEOUT_SECONDS: int = 55
-AGY_PRINT_TIMEOUT: str = "45s"
-AGY_MODEL: str = "gemini-3.7-flash-low"
+CURSOR_AGENT_TIMEOUT_SECONDS: int = 90
 
 
-def resolve_agy() -> str:
+def resolve_cursor_agent() -> str:
     extra_paths: list[str] = [
         str(Path.home() / ".local" / "bin"),
-        str(Path.home() / ".antigravity" / "antigravity" / "bin"),
     ]
     search_path: str = os.pathsep.join(extra_paths + [os.environ.get("PATH", "")])
-    agy_path: str | None = shutil.which("agy", path=search_path)
-    if agy_path is None:
-        raise FileNotFoundError("agy not found; install Antigravity CLI and sign in")
-    return agy_path
+    agent_path: str | None = shutil.which("cursor-agent", path=search_path)
+    if agent_path is None:
+        raise FileNotFoundError("cursor-agent not found; install Cursor Agent CLI and sign in")
+    return agent_path
 
 
 def strip_code_fences(text: str) -> str:
@@ -60,38 +57,31 @@ def messages_to_prompt(messages: list[dict[str, Any]]) -> str:
     return "\n\n".join(parts)
 
 
-def complete_with_agy(prompt: str) -> str:
-    agy_path: str = resolve_agy()
+def complete_with_cursor_agent(prompt: str) -> str:
+    agent_path: str = resolve_cursor_agent()
     completed: subprocess.CompletedProcess[str] = subprocess.run(
         [
-            agy_path,
-            "--model",
-            AGY_MODEL,
-            "--effort",
-            "low",
+            agent_path,
+            "-p",
+            "--mode",
+            "ask",
             "--output-format",
             "text",
-            "--print-timeout",
-            AGY_PRINT_TIMEOUT,
-            "--dangerously-skip-permissions",
-            "-p",
+            "--trust",
+            "--sandbox",
+            "enabled",
             prompt,
         ],
         capture_output=True,
         text=True,
-        timeout=AGY_TIMEOUT_SECONDS,
+        timeout=CURSOR_AGENT_TIMEOUT_SECONDS,
         env=os.environ.copy(),
     )
     if completed.returncode != 0:
-        detail: str = (completed.stderr or completed.stdout or "agy failed").strip()
-        if "timeout waiting for response" in detail:
-            raise RuntimeError(
-                "agy is logged in, but print mode never returned text "
-                "(agy -p timed out). Interactive `agy` may still work."
-            )
+        detail: str = (completed.stderr or completed.stdout or "cursor-agent failed").strip()
         raise RuntimeError(detail)
     if not (completed.stdout or "").strip():
-        raise RuntimeError("agy -p returned empty output")
+        raise RuntimeError("cursor-agent -p returned empty output")
     return strip_code_fences(completed.stdout or "")
 
 
@@ -116,7 +106,7 @@ class Handler(BaseHTTPRequestHandler):
                 200,
                 {
                     "object": "list",
-                    "data": [{"id": "default", "object": "model", "owned_by": "agy"}],
+                    "data": [{"id": "default", "object": "model", "owned_by": "cursor-agent"}],
                 },
             )
             return
@@ -131,14 +121,14 @@ class Handler(BaseHTTPRequestHandler):
         try:
             request: dict[str, Any] = json.loads(raw.decode("utf-8"))
             prompt: str = messages_to_prompt(request.get("messages") or [])
-            content: str = complete_with_agy(prompt)
+            content: str = complete_with_cursor_agent(prompt)
         except Exception as err:
             self._send_json(502, {"error": {"message": str(err)}})
             return
         self._send_json(
             200,
             {
-                "id": "chatcmpl-agy",
+                "id": "chatcmpl-cursor-agent",
                 "object": "chat.completion",
                 "model": request.get("model", "default") if isinstance(request, dict) else "default",
                 "choices": [
@@ -166,5 +156,5 @@ if __name__ == "__main__":
     try:
         main()
     except OSError as err:
-        sys.stderr.write(f"agy-openai-proxy failed to bind {HOST}:{PORT}: {err}\n")
+        sys.stderr.write(f"cursor-agent-openai-proxy failed to bind {HOST}:{PORT}: {err}\n")
         sys.exit(1)

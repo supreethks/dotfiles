@@ -55,7 +55,14 @@ Resolve settings in this order (later wins only for explicit env overrides):
     "value": "<e.g. Cmd+Shift+Space or https://localhost:4321>"
   },
   "website_url": "",
-  "android": { "package_id": "", "main_activity": "", "apk_path_glob": "" },
+  "android": {
+    "package_id": "",
+    "main_activity": "",
+    "apk_path_glob": "",
+    "avd": "",
+    "console_port": "",
+    "serial": ""
+  },
   "ios": { "scheme": "", "bundle_id": "", "simulator_name": "" },
   "prd_glob": "**/YYYYMMDD - PRD - *.md"
 }
@@ -90,7 +97,7 @@ Used by any feature workflow (`vimark-feature-workflow`, `mobile-feature-workflo
 |---|---|---|---|
 | Desktop | Warm Tart (`tart_vm` from config) | Peekaboo / OS keyboard, ffmpeg, optional app MCP | `qa_desktop_tart.txt` |
 | Website | Real Chromium | chrome-devtools MCP or Playwright | `qa_website_browser.txt` |
-| Android | Emulator | adb + mobile MCP | `qa_android_emulator.txt` |
+| Android | Emulator from repo `android.avd` / `android.serial` (ViMark: `Vimark_Pixel_8` @ `emulator-5574`) | adb + mobile MCP | `qa_android_emulator.txt` |
 | iOS | Simulator | simctl + xcodemcp / mobile MCP | `qa_ios_simulator.txt` |
 
 Path heuristics (override with `QA_PLATFORMS`):  

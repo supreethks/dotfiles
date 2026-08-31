@@ -1,6 +1,6 @@
-# AIChat talks to the local AGY (Antigravity) proxy, not a public API key.
+# AIChat talks to the local cursor-agent proxy, not a public API key.
 # The proxy is started on first use from zsh (Cmd+E or `??`).
-model: agy:default
+model: cursor-agent:default
 stream: false
 save: true
 keybindings: emacs
@@ -8,7 +8,7 @@ save_shell_history: true
 
 clients:
   - type: openai-compatible
-    name: agy
+    name: cursor-agent
     api_base: http://127.0.0.1:18741/v1
     api_key: local
     models:

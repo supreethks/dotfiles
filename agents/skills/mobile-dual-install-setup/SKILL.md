@@ -8,6 +8,8 @@ description: Enforce dual side-by-side installation of Debug and Release builds 
 ## Core Philosophy
 Every mobile project (Android and iOS) MUST support installing both the **Production/Release** build (from Play Store / App Store) and the **Debug** build simultaneously on the same physical device or emulator without signature, package name, authority, or bundle ID collisions.
 
+**ViMark:** install only to AVD `Vimark_Pixel_8` (`ANDROID_SERIAL=emulator-5574`). Do not use `Pixel_8`, `Small_Phone`, or a physical device unless the user names it.
+
 ---
 
 ## 1. Android Configuration

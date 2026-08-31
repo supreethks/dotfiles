@@ -37,7 +37,8 @@ Before initiating an adversarial review (either via runner scripts or in-session
    - `.rs`, `Cargo.toml` → `reviewer_rust_backend.txt`
    - `src-tauri/`, `tauri.conf.json` → `reviewer_tauri_frontend.txt`, `reviewer_desktop_os.txt`
    - `extension/`, `manifest.json` → `reviewer_extension_crossbrowser.txt`
-   - `android/`, `ios/`, `.kt`, `.swift` → `reviewer_mobile_native.txt`
+   - `android/`, `.kt` → `reviewer_android.txt`
+   - `ios/`, `.swift` → `reviewer_mobile_native.txt`
    - `workers/`, `wrangler.jsonc`, `sync/` → `reviewer_cloudflare_sync.txt`
    - Global fallback / Security gate → `reviewer_sec.txt`, `reviewer_arch.txt`
 4. **Approval Verdict**: Reviewers evaluate the patch in parallel. If all reviewers output `VERDICT: APPROVED`, the gate passes.
@@ -57,7 +58,8 @@ All prompt personas are version-controlled in `~/.agents/skills/adversarial-revi
 | `reviewer_tauri_frontend.txt` | Tauri IPC safety, capability permissions, CSP adherence, window state synchronization. |
 | `reviewer_desktop_os.txt` | Native macOS/Windows quirks, window activation, focus stealing, multi-monitor coordinates. |
 | `reviewer_extension_crossbrowser.txt` | Manifest V3 lifecycle, minimal permissions, background worker wakeups, native messaging. |
-| `reviewer_mobile_native.txt` | Android/iOS lifecycle, background execution limits, memory footprint, dual-install qualifiers. |
+| `reviewer_android.txt` | Native Kotlin XML/Fragments/MVI companion: Share/`ACTION_SEND`, Keystore vs desktop Rust Argon2id/AES-GCM, WorkManager/Doze, Room LWW/dirty queue, R8 keep-rules, dual-install, exported components. Not Compose. |
+| `reviewer_mobile_native.txt` | iOS (and shared mobile) lifecycle, background execution limits, memory footprint. Do not dispatch for `android/` / `*.kt`. |
 | `reviewer_cloudflare_sync.txt` | Workers/Durable Objects concurrency, edge caching, WebSocket alarms, transaction isolation. |
 
 ---

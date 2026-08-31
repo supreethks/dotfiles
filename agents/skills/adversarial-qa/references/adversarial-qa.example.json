@@ -11,7 +11,10 @@
   "android": {
     "package_id": "com.example.app.debug",
     "main_activity": ".MainActivity",
-    "apk_path_glob": "android/app/build/outputs/apk/debug/*.apk"
+    "apk_path_glob": "android/app/build/outputs/apk/debug/*.apk",
+    "avd": "Example_Pixel_8",
+    "console_port": "5554",
+    "serial": "emulator-5554"
   },
   "ios": {
     "scheme": "ExampleApp",

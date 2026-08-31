@@ -18,6 +18,8 @@ ls src-tauri package.json       # Tauri desktop app
 
 No `forgejo` remote, or no `src-tauri/` — this skill does not apply. For Android/iOS Forgejo repos use `mobile-feature-workflow` instead.
 
+**Android emulator (exclusive):** AVD `Vimark_Pixel_8`, console port `5574`, `ANDROID_SERIAL=emulator-5574`. Never boot or target `Pixel_8`, `Small_Phone`, or a physical device unless the user names it. Boot: `~/.agents/skills/vimark-feature-workflow/scripts/boot-android-emulator.sh` then `export ANDROID_SERIAL=emulator-5574` for every `adb` / Gradle connected test.
+
 **Obsidian Project Context & Backlog Intake**:
 - Check `/Users/supreethks/docs/obsidian/main-vault/projects/vimark/` (`vimark.md`, `Kanban.md`, `PRD.md`).
 - **If triggered by "let's work on the backlog"**:

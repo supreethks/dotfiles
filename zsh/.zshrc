@@ -129,37 +129,37 @@ fi
 # ── Prompts & Shell Utils ───────────────────────────────────────────────
 eval "$(starship init zsh)"
 
-# AIChat shell helper (Cmd+E in Ghostty → Alt+E sequence). Uses local `agy`.
+# AIChat shell helper (Cmd+E in Ghostty → Alt+E sequence). Uses `cursor-agent`.
 # macOS default is ~/Library/Application Support/aichat; pin the XDG path from dotfiles.
 export AICHAT_CONFIG_DIR="$HOME/.config/aichat"
-AICHAT_AGY_PROXY_PORT=18741
-AICHAT_AGY_PROXY="$HOME/.config/aichat/agy-openai-proxy.py"
+AICHAT_PROXY_PORT=18741
+AICHAT_PROXY="$HOME/.config/aichat/cursor-agent-openai-proxy.py"
 
-_aichat_ensure_agy_proxy() {
-  if ! command -v agy >/dev/null 2>&1; then
-    echo "agy not found; install Antigravity CLI and sign in" >&2
+_aichat_ensure_proxy() {
+  if ! command -v cursor-agent >/dev/null 2>&1; then
+    echo "cursor-agent not found; install Cursor Agent CLI and sign in" >&2
     return 1
   fi
-  if [[ ! -f "$AICHAT_AGY_PROXY" ]]; then
-    echo "missing $AICHAT_AGY_PROXY" >&2
+  if [[ ! -f "$AICHAT_PROXY" ]]; then
+    echo "missing $AICHAT_PROXY" >&2
     return 1
   fi
-  if nc -z 127.0.0.1 "$AICHAT_AGY_PROXY_PORT" >/dev/null 2>&1; then
+  if nc -z 127.0.0.1 "$AICHAT_PROXY_PORT" >/dev/null 2>&1; then
     return 0
   fi
-  nohup python3 "$AICHAT_AGY_PROXY" >/dev/null 2>&1 &
+  nohup python3 "$AICHAT_PROXY" >/dev/null 2>&1 &
   disown
   local i
   for i in {1..40}; do
-    nc -z 127.0.0.1 "$AICHAT_AGY_PROXY_PORT" >/dev/null 2>&1 && return 0
+    nc -z 127.0.0.1 "$AICHAT_PROXY_PORT" >/dev/null 2>&1 && return 0
     sleep 0.05
   done
-  echo "failed to start aichat agy proxy on port $AICHAT_AGY_PROXY_PORT" >&2
+  echo "failed to start aichat cursor-agent proxy on port $AICHAT_PROXY_PORT" >&2
   return 1
 }
 
-??() {
-  _aichat_ensure_agy_proxy || return 1
+function '??' {
+  _aichat_ensure_proxy || return 1
   if (( $# == 0 )); then
     aichat
   else
@@ -171,18 +171,18 @@ _aichat_zsh() {
   if [[ -z "$BUFFER" ]]; then
     return
   fi
-  if ! _aichat_ensure_agy_proxy; then
+  if ! _aichat_ensure_proxy; then
     return 1
   fi
   local _old=$BUFFER
   local _err
   BUFFER+="⌛"
   zle -I && zle redisplay
-  BUFFER=$(aichat -e "$_old" 2>/tmp/aichat-agy.err)
+  BUFFER=$(aichat -e "$_old" 2>/tmp/aichat-cursor-agent.err)
   if [[ $? -ne 0 || -z "$BUFFER" ]]; then
-    _err=$(tail -n 3 /tmp/aichat-agy.err 2>/dev/null)
+    _err=$(tail -n 3 /tmp/aichat-cursor-agent.err 2>/dev/null)
     BUFFER="$_old"
-    zle -M "${_err:-aichat/agy failed}"
+    zle -M "${_err:-aichat/cursor-agent failed}"
   fi
   zle end-of-line
 }
@@ -218,6 +218,9 @@ for dir in ~/development/*/(N); do
     clean_name="${dir_name#project-}"
     hash -d "$clean_name"="$dir"
     hash -d "$dir_name"="$dir"
+    if (( $+commands[$clean_name] )); then
+      continue
+    fi
     alias "$clean_name"="cd $dir"
   fi
 done

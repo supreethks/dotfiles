@@ -160,7 +160,7 @@ python3 /Users/supreethks/.agents/skills/obsidian-project-tracker/scripts/backlo
      # From the product repo root (config auto-loaded)
      ~/.agents/skills/adversarial-qa/scripts/run-qa-gate.sh <base_ref>
      ```
-   - Desktop: unsigned debug in warm Tart · Android: emulator · iOS: Simulator · Web: real browser.
+   - Desktop: unsigned debug in warm Tart · Android: repo-pinned AVD (`android.serial` in `.adversarial-qa.json`; ViMark: `Vimark_Pixel_8` @ `emulator-5574`) · iOS: Simulator · Web: real browser.
    - Defects block merge · Observations do not · Infra → one retry → else `INCONCLUSIVE`.
    - Exploratory chaos is **nightly only**.
    - Attach `qa-packages/…` + REPORT summary to the PR and project Work_Log.

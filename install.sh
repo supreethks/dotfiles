@@ -46,7 +46,9 @@ if [ -L "$HOME/.config/aichat" ]; then
 fi
 mkdir -p "$HOME/.config/aichat" "$HOME/.config/atuin"
 link_file "$DOTFILES_DIR/config/aichat/config.yaml" "$HOME/.config/aichat/config.yaml"
-link_file "$DOTFILES_DIR/config/aichat/agy-openai-proxy.py" "$HOME/.config/aichat/agy-openai-proxy.py"
+link_file "$DOTFILES_DIR/config/aichat/cursor-agent-openai-proxy.py" "$HOME/.config/aichat/cursor-agent-openai-proxy.py"
+# Old shells still look for the agy proxy path; keep a compat name.
+link_file "$DOTFILES_DIR/config/aichat/cursor-agent-openai-proxy.py" "$HOME/.config/aichat/agy-openai-proxy.py"
 link_file "$DOTFILES_DIR/config/atuin/config.toml" "$HOME/.config/atuin/config.toml"
 
 # 3. Agent Skills & Search Config

@@ -36,7 +36,7 @@ For each Acceptance Criteria checkbox in the task PRD:
 
 ## Android smoke (`smoke-android`)
 
-1. Emulator ready (`adb wait-for-device` + boot_completed)
+1. Emulator ready (`adb -s "$QA_ANDROID_SERIAL" wait-for-device` + boot_completed). ViMark: `Vimark_Pixel_8` / `emulator-5574`.
 2. Install APK (`QA_ANDROID_APK_GLOB` / package `QA_ANDROID_PACKAGE`)
 3. Screen recording on
 4. Launch main activity; primary interaction

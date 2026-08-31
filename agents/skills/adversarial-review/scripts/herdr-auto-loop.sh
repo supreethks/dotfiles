@@ -127,7 +127,10 @@ while [ "$ROUND" -le "$MAX_ROUNDS" ]; do
   if echo "$CHANGED_FILES" | grep -qE 'manifest\.json|extension/'; then
     REVIEWERS+=("reviewer_extension_crossbrowser.txt")
   fi
-  if echo "$CHANGED_FILES" | grep -qE 'android/|ios/|\.kt$|\.swift$'; then
+  if echo "$CHANGED_FILES" | grep -qE 'android/|\.kt$'; then
+    REVIEWERS+=("reviewer_android.txt")
+  fi
+  if echo "$CHANGED_FILES" | grep -qE 'ios/|\.swift$'; then
     REVIEWERS+=("reviewer_mobile_native.txt")
   fi
   if echo "$CHANGED_FILES" | grep -qE 'workers/|wrangler\.(toml|jsonc)|sync/'; then

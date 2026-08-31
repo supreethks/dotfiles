@@ -6,8 +6,8 @@ Custom configuration files, shell scripts, window management rules, and AI agent
 
 ## 📦 What's Included
 
-- **Shell (`zsh/`)**: `.zshrc` with Oh-My-Zsh plugins, Atuin history, fzf widgets, AIChat (Cmd+E via AGY), `obdaily`, and secret decoupling via `~/.zshrc.local`.
-- **AIChat (`config/aichat/`)**: local config plus a small proxy so AIChat uses a logged-in `agy` CLI.
+- **Shell (`zsh/`)**: `.zshrc` with Oh-My-Zsh plugins, Atuin history, fzf widgets, AIChat (Cmd+E via cursor-agent), `obdaily`, and secret decoupling via `~/.zshrc.local`.
+- **AIChat (`config/aichat/`)**: local config plus a small proxy so AIChat uses a logged-in `cursor-agent` CLI.
 - **Atuin (`config/atuin/`)**: fuzzy command history (local only, no sync).
 - **Prompt (`starship/`)**: Starship cross-shell prompt configuration (`starship.toml`).
 - **Git (`git/`)**: `.gitconfig` with aliases and global `.gitignore`.
