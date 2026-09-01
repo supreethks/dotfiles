@@ -15,3 +15,7 @@
 # Ignore transient caches
 automatic_backups/
 .neoconf.json
+
+# git-cleanup logs
+scripts/git-cleanup/logs/
+*.err.log

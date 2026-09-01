@@ -56,6 +56,7 @@ link_file "$DOTFILES_DIR/agents/skills" "$HOME/.agents/skills"
 link_file "$DOTFILES_DIR/search/.ignore" "$HOME/.ignore"
 link_file "$DOTFILES_DIR/search/.ignore" "$HOME/.fdignore"
 link_file "$DOTFILES_DIR/search/.ignore" "$HOME/.rgignore"
+link_file "$DOTFILES_DIR/scripts/git-cleanup" "$HOME/scripts/git-cleanup"
 
 # 4. Local secrets setup
 if [ ! -f "$HOME/.zshrc.local" ]; then
