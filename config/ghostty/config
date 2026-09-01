@@ -104,10 +104,12 @@ keybind = super+digit_7=text:\x007
 keybind = super+digit_8=text:\x008
 keybind = super+digit_9=text:\x009
 
-# Ghostty host actions (scroll, prompt jump, reload)
+# Ghostty host actions (prompt jump, reload)
 keybind = cmd+shift+r=reload_config
-keybind = cmd+u=scroll_page_up
-keybind = cmd+shift+u=scroll_page_down
+# Cmd+U: enter Herdr copy mode (prefix+[) then half-page up (ctrl+u).
+keybind = super+u=text:\x00[\x15
+# Cmd+Shift+U: enter copy mode then half-page down (ctrl+d). Cmd+D stays split.
+keybind = super+shift+u=text:\x00[\x04
 keybind = cmd+g=jump_to_prompt:-1
 keybind = cmd+shift+g=jump_to_prompt:1
 
