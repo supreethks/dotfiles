@@ -264,6 +264,27 @@ fi
 alias zj="zellij"
 alias h="herdr"
 
+unalias trr 2>/dev/null
+trr() {
+  if ! "$HOME/media-server/scripts/nord-vpn-connected.sh" >/dev/null 2>&1; then
+    echo "trr: refused — NordVPN is not connected." >&2
+    return 1
+  fi
+  case "$1" in
+    start)
+      shift
+      transmission-remote -t all -s "$@"
+      ;;
+    stop)
+      shift
+      transmission-remote -t all -S "$@"
+      ;;
+    *)
+      transmission-remote "$@"
+      ;;
+  esac
+}
+
 
 # clipshot Ghostty integration
 export CLIPSHOT_TEMPLATE="See screenshot : {link} "

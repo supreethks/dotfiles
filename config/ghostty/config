@@ -87,10 +87,11 @@ keybind = super+alt+j=text:\x00\x0a
 keybind = super+alt+k=text:\x00\x0b
 keybind = super+alt+l=text:\x00\x0c
 
-# Herdr zoom, tabs, close
+# Herdr zoom, tabs, close, navigator
 keybind = super+shift+enter=text:\x00z
 keybind = super+t=text:\x00c
 keybind = super+w=text:\x00x
+keybind = super+j=text:\x00g
 
 # Herdr tab switch (Cmd+1..9)
 keybind = super+digit_1=text:\x001
