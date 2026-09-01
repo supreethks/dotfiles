@@ -25,8 +25,8 @@ background-opacity = 1
 background-blur = false
 unfocused-split-opacity = 1
 
-# macOS native feel
-macos-titlebar-style = tabs
+# macOS titlebar
+macos-titlebar-style = transparent
 macos-option-as-alt = true
 window-save-state = never
 window-theme = auto

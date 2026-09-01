@@ -592,6 +592,8 @@
 	directory = /Users/supreethks/.cache/act/a92b2f414e6b6efb/hostexecutor
 	directory = /Users/supreethks/.cache/act/2eab8c8632b599d0/hostexecutor
 	directory = /Users/supreethks/.cache/act/2eab8c8632b599d0/hostexecutor
+	directory = /Users/supreethks/.cache/act/df430f0e1ba89a5d/hostexecutor
+	directory = /Users/supreethks/.cache/act/df430f0e1ba89a5d/hostexecutor
 [interactive]
 	diffFilter = delta --color-only
 [delta]

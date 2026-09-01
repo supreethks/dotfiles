@@ -289,3 +289,6 @@ trr() {
 # clipshot Ghostty integration
 export CLIPSHOT_TEMPLATE="See screenshot : {link} "
 [[ -f "$HOME/development/clipshot/zsh/clipshot.zsh" ]] && source "$HOME/development/clipshot/zsh/clipshot.zsh"
+
+# Chrome with remote debugging port for local AI browser automation
+alias chrome-debug='nohup "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --remote-debugging-port=9222 --user-data-dir="$HOME/.config/chrome-automation" >/dev/null 2>&1 &'
