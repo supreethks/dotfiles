@@ -594,6 +594,18 @@
 	directory = /Users/supreethks/.cache/act/2eab8c8632b599d0/hostexecutor
 	directory = /Users/supreethks/.cache/act/df430f0e1ba89a5d/hostexecutor
 	directory = /Users/supreethks/.cache/act/df430f0e1ba89a5d/hostexecutor
+	directory = /Users/supreethks/.cache/act/b4861bb79aac87c5/hostexecutor
+	directory = /Users/supreethks/.cache/act/b4861bb79aac87c5/hostexecutor
+	directory = /Users/supreethks/.cache/act/cc445e5127330f65/hostexecutor
+	directory = /Users/supreethks/.cache/act/cc445e5127330f65/hostexecutor
+	directory = /Users/supreethks/.cache/act/accf7976f58c521d/hostexecutor
+	directory = /Users/supreethks/.cache/act/accf7976f58c521d/hostexecutor
+	directory = /Users/supreethks/.cache/act/a76b4c0a3597c5f1/hostexecutor
+	directory = /Users/supreethks/.cache/act/a76b4c0a3597c5f1/hostexecutor
+	directory = /Users/supreethks/.cache/act/c1bb7d5710496afa/hostexecutor
+	directory = /Users/supreethks/.cache/act/c1bb7d5710496afa/hostexecutor
+	directory = /Users/supreethks/.cache/act/c8ab5980be2150be/hostexecutor
+	directory = /Users/supreethks/.cache/act/c8ab5980be2150be/hostexecutor
 [interactive]
 	diffFilter = delta --color-only
 [delta]

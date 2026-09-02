@@ -38,6 +38,9 @@ autoload -Uz compinit && compinit
 [[ -f ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 [[ -f ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+# Ctrl+F: accept autosuggestion one word at a time (Ctrl+E / → still accept full)
+bindkey '^F' forward-word
+
 # ── Environment & Path ───────────────────────────────────────────────────
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -264,6 +267,19 @@ fi
 alias zj="zellij"
 alias h="herdr"
 
+# Rename the current Herdr tab: hrr <new-name>
+hrr() {
+  if [[ "${HERDR_ENV:-}" != 1 || -z "${HERDR_TAB_ID:-}" ]]; then
+    echo "hrr: not inside a herdr tab" >&2
+    return 1
+  fi
+  if [[ $# -lt 1 ]]; then
+    echo "usage: hrr <new-name>" >&2
+    return 1
+  fi
+  herdr tab rename "$HERDR_TAB_ID" "$*"
+}
+
 unalias trr 2>/dev/null
 trr() {
   if ! "$HOME/media-server/scripts/nord-vpn-connected.sh" >/dev/null 2>&1; then
@@ -285,6 +301,71 @@ trr() {
   esac
 }
 
+# Jellyfin-safe torrent pick: 1080p DSNP WEB-DL H.264 DDP, no HEVC/REMUX/micro-encodes
+tordl-jellyfin() {
+  local title="$*"
+  if [[ -z "$title" ]]; then
+    echo "Usage: tordl-jellyfin Movie Title 2024" >&2
+    return 1
+  fi
+  if ! command -v tordl >/dev/null 2>&1; then
+    echo "tordl-jellyfin: tordl not found in PATH" >&2
+    return 1
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "tordl-jellyfin: jq not found in PATH" >&2
+    return 1
+  fi
+  local json match name seeds leeches size magnet source reply
+  echo "Searching for Jellyfin-safe release: $title"
+  if ! json=$(tordl -a "$title" 2>/dev/null); then
+    echo "tordl-jellyfin: search failed" >&2
+    return 1
+  fi
+  if ! echo "$json" | jq -e '.result' >/dev/null 2>&1; then
+    echo "tordl-jellyfin: invalid response from tordl" >&2
+    return 1
+  fi
+  match=$(echo "$json" | jq -c '
+    .result
+    | map(select(
+        (.name | test("1080p"; "i"))
+        and (.name | test("WEB-DL"; "i"))
+        and (.name | test("DSNP"; "i"))
+        and (.name | test("H[ .]?264|x264"; "i"))
+        and (.name | test("HEVC|x265|H[ .]?265"; "i") | not)
+        and (.name | test("DDP"; "i"))
+        and (.name | test("BrRip|YIFY|REMUX|ita|720p|2160p|BluRay"; "i") | not)
+      ))
+    | sort_by(-.seeds)
+    | .[0] // null
+  ')
+  if [[ "$match" == "null" || -z "$match" ]]; then
+    echo "No Jellyfin-safe match for: $title"
+    return 1
+  fi
+  name=$(echo "$match" | jq -r '.name')
+  seeds=$(echo "$match" | jq -r '.seeds')
+  leeches=$(echo "$match" | jq -r '.leeches')
+  size=$(echo "$match" | jq -r '.size')
+  source=$(echo "$match" | jq -r '.origins | join(", ")')
+  magnet=$(echo "$match" | jq -r '.magnet_url')
+  echo ""
+  echo "Best match:"
+  echo "  Title:    $name"
+  echo "  Source:   $source"
+  echo "  Seeds:    $seeds"
+  echo "  Leechers: $leeches"
+  echo "  Size:     $size"
+  echo ""
+  read -r "reply?Add to Transmission in $(pwd)? [y/N] "
+  if [[ ! "$reply" =~ ^[Yy]$ ]]; then
+    echo "Cancelled."
+    return 0
+  fi
+  trr -w "$(pwd)" -a "$magnet"
+}
+
 
 # clipshot Ghostty integration
 export CLIPSHOT_TEMPLATE="See screenshot : {link} "
@@ -292,3 +373,6 @@ export CLIPSHOT_TEMPLATE="See screenshot : {link} "
 
 # Chrome with remote debugging port for local AI browser automation
 alias chrome-debug='nohup "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --remote-debugging-port=9222 --user-data-dir="$HOME/.config/chrome-automation" >/dev/null 2>&1 &'
+
+# opencode
+export PATH=/Users/supreethks/.opencode/bin:$PATH

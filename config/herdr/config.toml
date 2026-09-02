@@ -11,6 +11,7 @@ name = "terminal"
 
 [theme.custom]
 panel_bg = "reset"
+active_row_bg = "#222436"
 
 [keys]
 prefix = "ctrl+space"
@@ -86,7 +87,7 @@ description = "review the agent's last reply"
 
 # >>> herdr-ai-tracker sidebar
 [ui.sidebar.agents]
-rows = [["state_text"], [{ token = "agent", fg = "#7a8499", bold = false, dim = true }], [{ token = "workspace", fg = "#a9b1d6", bold = false, dim = false }, { token = "tab", fg = "#7a8499", bold = false, dim = true }]]
+rows = [["state_text"], [{ token = "agent", fg = "#7a8499", bold = false, dim = false }], [{ token = "workspace", fg = "#a9b1d6", bold = false, dim = false }, { token = "tab", fg = "#7a8499", bold = false, dim = false }]]
 row_gap = 0 # herdr-ai-tracker
 
 [ui.sidebar.spaces]
