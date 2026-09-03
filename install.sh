@@ -50,6 +50,7 @@ link_file "$DOTFILES_DIR/config/aichat/cursor-agent-openai-proxy.py" "$HOME/.con
 # Old shells still look for the agy proxy path; keep a compat name.
 link_file "$DOTFILES_DIR/config/aichat/cursor-agent-openai-proxy.py" "$HOME/.config/aichat/agy-openai-proxy.py"
 link_file "$DOTFILES_DIR/config/atuin/config.toml" "$HOME/.config/atuin/config.toml"
+link_file "$DOTFILES_DIR/config/glow/glow.yml" "$HOME/Library/Preferences/glow/glow.yml"
 
 # 3. Agent Skills & Search Config
 link_file "$DOTFILES_DIR/agents/skills" "$HOME/.agents/skills"

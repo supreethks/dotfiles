@@ -1,0 +1,20 @@
+# Glow style name or path to a custom JSON style.
+style: "auto"
+
+# TUI-only mouse wheel support.
+mouse: false
+
+# Use an external pager for CLI output.
+pager: false
+
+# 0 lets Glow use the current terminal width instead of forcing a fixed width.
+width: 0
+
+# TUI-only: include hidden and ignored files in the file browser.
+all: false
+
+# TUI-only: show line numbers.
+showLineNumbers: false
+
+# Preserve source newlines in rendered output.
+preserveNewLines: false

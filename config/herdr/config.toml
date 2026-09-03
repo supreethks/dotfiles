@@ -1,3 +1,4 @@
+onboarding = false
 [ui]
 agent_panel_sort = "spaces"
 status_indicators = "symbols"
@@ -101,3 +102,6 @@ type = "plugin_action"
 command = "herdr-ai-tracker.refresh"
 description = "refresh AI tracker quotas"
 # <<< herdr-ai-tracker keys
+
+[ui.toast]
+delivery = "off"

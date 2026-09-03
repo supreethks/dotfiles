@@ -18,6 +18,7 @@ Custom configuration files, shell scripts, window management rules, and AI agent
   - `kitty/`: Kitty terminal configuration.
   - `ghostty/`: Ghostty terminal configuration.
   - `nvim/`: Neovim / LazyVim IDE setup.
+  - `glow/`: Terminal Markdown viewer configuration.
 - **AI Agent Skills (`agents/skills/`)**:
   - `obsidian-project-tracker`: Automated Obsidian project & Kanban ledger management.
   - `vimark-feature-workflow`: Desktop app CI/delivery workflow.
